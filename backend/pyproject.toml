@@ -1,0 +1,12 @@
+[project]
+name = "arthurvisions-api"
+version = "0.1.0"
+description = "FastAPI backend for Arthur Visions running on Cloudflare Workers"
+dependencies = [
+    "fastapi>=0.110.0",
+]
+
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+

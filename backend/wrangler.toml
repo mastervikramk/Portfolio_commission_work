@@ -1,0 +1,21 @@
+name = "arthurvisions-api"
+main = "main.py"
+compatibility_date = "2026-09-21"
+compatibility_flags = ["python_workers"]
+
+# Cloudflare D1 Database Binding
+[[d1_databases]]
+binding = "DB"
+database_name = "arthurvisions-db"
+database_id = "placeholder-d1-id" # Replace with 'wrangler d1 create arthurvisions-db' ID
+
+# Cloudflare R2 Bucket Binding (for customer reference photos and artworks)
+[[r2_buckets]]
+binding = "ART_BUCKET"
+bucket_name = "arthurvisions-storage"
+
+# Variables
+[vars]
+ADMIN_PIN = "2025"
+ARTIST_EMAIL = "arthurvisions521@gmail.com"
+
