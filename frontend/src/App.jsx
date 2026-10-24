@@ -18,8 +18,24 @@ import { ARTWORKS_DATA } from './data/artworks';
 export default function App() {
   const [activePage, setActivePage] = useState('home');
   const [artworks, setArtworks] = useState(() => {
-    const saved = localStorage.getItem('arthurvisions_custom_artworks');
-    return saved ? JSON.parse(saved) : ARTWORKS_DATA;
+    try {
+      const saved = localStorage.getItem('arthurvisions_custom_artworks');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        const hasUnsplash = Array.isArray(parsed) && parsed.some(a => typeof a.image === 'string' && a.image.includes('unsplash.com'));
+        const isAcrylicFirst = Array.isArray(parsed) && parsed.length > 0 && parsed[0]?.id === 'art-acrylic-1';
+        const hasLivePortrait = Array.isArray(parsed) && parsed.some(a => a.id === 'art-live-portrait-1');
+        const hasOldSpelling = Array.isArray(parsed) && parsed.some(a => typeof a.title === 'string' && a.title.includes('वैज्जिका'));
+        
+        if (!hasUnsplash && isAcrylicFirst && hasLivePortrait && !hasOldSpelling) {
+          return parsed;
+        }
+        localStorage.removeItem('arthurvisions_custom_artworks');
+      }
+    } catch (e) {
+      // ignore parsing error
+    }
+    return ARTWORKS_DATA;
   });
   const [selectedArtConfig, setSelectedArtConfig] = useState(null);
   const [lightboxItem, setLightboxItem] = useState(null);

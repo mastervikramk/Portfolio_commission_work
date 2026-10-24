@@ -13,7 +13,7 @@ export default function LightboxModal({ item, onClose, onOrderSimilar }) {
 
   if (!item) return null;
 
-  const isCertificate = !!item.issuer;
+  const isDocumentOrHonor = !!item.issuer || !!item.role;
 
   return (
     <div className="fixed inset-0 z-50 bg-[#1F1D1B]/90 backdrop-blur-md flex items-center justify-center p-4 md:p-8 animate-fadeIn">
@@ -48,7 +48,7 @@ export default function LightboxModal({ item, onClose, onOrderSimilar }) {
             {/* Badges */}
             <div className="flex items-center gap-2">
               <span className="px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-[#F0E9DC] text-[#B5502F] border border-[#DDD3C3]">
-                {item.category || item.issuer || "Fine Art"}
+                {item.badge || item.category || item.issuer || "Fine Art"}
               </span>
               {item.status && (
                 <span
@@ -65,8 +65,15 @@ export default function LightboxModal({ item, onClose, onOrderSimilar }) {
 
             {/* Title & Metadata */}
             <h3 className="font-serif text-2xl md:text-3xl font-bold text-[#1F1D1B] leading-tight">
-              {item.title}
+              {item.title || item.name}
             </h3>
+
+            {item.role && (
+              <div className="bg-[#F0E9DC] p-3.5 rounded-xl border border-[#DDD3C3] text-xs text-[#5A554F] space-y-1">
+                <p className="font-bold text-[#1F1D1B] text-sm">{item.role}</p>
+                {item.event && <p className="italic text-[11px] text-[#B5502F] font-semibold">{item.event}</p>}
+              </div>
+            )}
 
             {item.medium && (
               <div className="border-y border-[#DDD3C3]/60 py-3 space-y-1.5 text-xs text-[#5A554F]">
@@ -100,7 +107,7 @@ export default function LightboxModal({ item, onClose, onOrderSimilar }) {
               {item.description || item.sub || "Handcrafted with pure archival materials and authentic artistic technique."}
             </p>
 
-            {isCertificate && item.issuer && (
+            {item.issuer && (
               <div className="bg-[#F0E9DC] p-3 rounded-lg border border-[#DDD3C3] text-xs text-[#5A554F]">
                 <p className="font-semibold text-[#1F1D1B]">Issued By:</p>
                 <p>{item.issuer}</p>
@@ -110,7 +117,7 @@ export default function LightboxModal({ item, onClose, onOrderSimilar }) {
 
           {/* Action CTAs */}
           <div className="pt-6 border-t border-[#DDD3C3]/60 space-y-2.5">
-            {!isCertificate && (
+            {!isDocumentOrHonor && (
               <button
                 onClick={() => {
                   onClose();
@@ -124,9 +131,9 @@ export default function LightboxModal({ item, onClose, onOrderSimilar }) {
             )}
 
             <a
-              href={`https://wa.me/${SITE_CONFIG.whatsappNumber}?text=${encodeURIComponent(
-                `Hi Vinita, I am interested in your artwork: "${item.title}" (${item.medium || item.category || 'Portfolio piece'}). Can you share more details?`
-              )}`}
+              href={SITE_CONFIG.getWhatsAppUrl(
+                `Hi Vinita, I saw your feature / work: "${item.title || item.name}". Can you share more details?`
+              )}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full py-2.5 px-4 rounded-xl bg-[#25D366] hover:bg-[#20ba59] text-white font-medium text-sm flex items-center justify-center gap-2 transition-all shadow-xs"

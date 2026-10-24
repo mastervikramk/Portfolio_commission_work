@@ -4,6 +4,7 @@ import {
   Eye, MessageSquare, Phone, MapPin, Clock, Tag, RefreshCw, LogOut, ArrowRight, Upload
 } from 'lucide-react';
 import { CATEGORIES } from '../data/artworks';
+import defaultArtImage from '../assets/charcoal_portrait_2.jpeg';
 
 export default function Admin({ artworks, setArtworks }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -81,7 +82,7 @@ export default function Admin({ artworks, setArtworks }) {
       status: newArt.status,
       price: newArt.price,
       description: newArt.description,
-      image: previewImage || "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1000&q=80",
+      image: previewImage || defaultArtImage,
       featured: false,
     };
 

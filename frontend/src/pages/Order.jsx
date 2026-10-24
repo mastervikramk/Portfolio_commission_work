@@ -185,9 +185,9 @@ export default function Order({ initialConfig, onOrderSuccess }) {
 
               <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
                 <a
-                  href={`https://wa.me/${SITE_CONFIG.whatsappNumber}?text=${encodeURIComponent(
+                  href={SITE_CONFIG.getWhatsAppUrl(
                     `Hi Vinita, I just submitted an order inquiry on your website for a ${formData.medium} (${formData.size}). My name is ${formData.name}.`
-                  )}`}
+                  )}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="px-6 py-3 rounded-full bg-[#25D366] text-white hover:bg-[#20ba59] font-medium text-sm flex items-center gap-2 shadow-xs"

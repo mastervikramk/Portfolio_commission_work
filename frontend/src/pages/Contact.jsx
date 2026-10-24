@@ -67,7 +67,7 @@ export default function Contact() {
                   <h4 className="font-bold text-[#1F1D1B]">WhatsApp Studio Support</h4>
                   <p className="text-xs text-[#5A554F]">Instant consultation for reference photos & quotes</p>
                   <a
-                    href={`https://wa.me/${SITE_CONFIG.whatsappNumber}?text=${encodeURIComponent("Hi Vinita, I have an inquiry regarding your art.")}`}
+                    href={SITE_CONFIG.getWhatsAppUrl("Hi Vinita, I have an inquiry regarding your art.")}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#25D366] text-white text-xs font-semibold mt-2 shadow-2xs hover:bg-[#20ba59]"
@@ -88,7 +88,7 @@ export default function Contact() {
                     {SITE_CONFIG.publicEmail}
                   </a>
                   <p className="text-[11px] text-[#5A554F] mt-0.5">
-                    Forwarded to: {SITE_CONFIG.forwardEmail}
+                    Direct studio desk (Inquiries answered within 24 hours)
                   </p>
                 </div>
               </div>

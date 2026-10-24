@@ -1,5 +1,7 @@
 from fastapi import FastAPI, Request, UploadFile, File, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
+import urllib.parse
 import uuid
 import json
 
@@ -21,6 +23,30 @@ async def root():
         "service": "Arthur Visions API",
         "platform": "Cloudflare Workers Python"
     }
+
+# WhatsApp Edge Redirect (Anonymizes artist's private phone number)
+@app.get("/api/whatsapp")
+async def whatsapp_redirect(request: Request, text: str = ""):
+    env = getattr(request, "scope", {}).get("env")
+    target = getattr(env, "WHATSAPP_TARGET", None) if env else None
+    if not target:
+        target = "918207442286"
+
+    # Support WhatsApp Business Short Links (wa.me/message/XYZ) or full URLs
+    target_str = str(target).strip()
+    if target_str.startswith("http"):
+        sep = "&" if "?" in target_str else "?"
+        destination = f"{target_str}{sep}text={urllib.parse.quote(text)}" if text else target_str
+        return RedirectResponse(url=destination, status_code=302)
+    elif target_str.startswith("message/"):
+        sep = "&" if "?" in target_str else "?"
+        destination = f"https://wa.me/{target_str}{sep}text={urllib.parse.quote(text)}" if text else f"https://wa.me/{target_str}"
+        return RedirectResponse(url=destination, status_code=302)
+    else:
+        # Default numeric phone number redirect
+        digits = "".join(filter(str.isdigit, target_str))
+        query = f"?text={urllib.parse.quote(text)}" if text else ""
+        return RedirectResponse(url=f"https://wa.me/{digits}{query}", status_code=302)
 
 # 1. Commission Order Endpoint
 @app.post("/api/order")

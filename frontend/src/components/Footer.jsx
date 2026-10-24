@@ -1,7 +1,8 @@
 import React from 'react';
-import { Palette, Mail, Phone, MapPin, Heart, ShieldCheck, MessageCircle } from 'lucide-react';
+import { Mail, Phone, MapPin, Heart, ShieldCheck, MessageCircle } from 'lucide-react';
 import { YoutubeIcon, InstagramIcon } from './SocialIcons';
 import { SITE_CONFIG } from '../config/site';
+import logoImage from '../assets/logo.png';
 
 export default function Footer({ setActivePage }) {
   const currentYear = new Date().getFullYear();
@@ -19,9 +20,11 @@ export default function Footer({ setActivePage }) {
           {/* Brand & Artist Bio */}
           <div className="space-y-4">
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-full bg-[#FAF7F2] border border-[#DDD3C3] flex items-center justify-center text-[#B5502F]">
-                <Palette className="w-5 h-5" />
-              </div>
+              <img
+                src={logoImage}
+                alt="Arthur Visions Logo"
+                className="w-9 h-9 rounded-full object-cover border border-[#DDD3C3]"
+              />
               <span className="font-serif text-2xl font-bold tracking-wide text-[#1F1D1B]">
                 Arthur Visions
               </span>
@@ -155,7 +158,7 @@ export default function Footer({ setActivePage }) {
               <div className="flex items-center gap-2.5">
                 <MessageCircle className="w-4 h-4 text-[#25D366] shrink-0 fill-current" />
                 <a 
-                  href={`https://wa.me/${SITE_CONFIG.whatsappNumber}?text=${encodeURIComponent("Hi Vinita, I have an inquiry regarding your art.")}`}
+                  href={SITE_CONFIG.getWhatsAppUrl("Hi Vinita, I have an inquiry regarding your art.")}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-[#B5502F] font-semibold text-xs text-[#1F1D1B] flex items-center gap-1"

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Palette, Menu, X, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Menu, X, ArrowRight, ShieldCheck } from 'lucide-react';
+import logoImage from '../assets/logo.png';
 
 export default function Navbar({ activePage, setActivePage }) {
   const [scrolled, setScrolled] = useState(false);
@@ -44,9 +45,11 @@ export default function Navbar({ activePage, setActivePage }) {
             onClick={() => handleNavClick('home')}
             className="flex items-center gap-3 group text-left cursor-pointer"
           >
-            <div className="w-10 h-10 rounded-full bg-[#FAF7F2] border border-[#DDD3C3] flex items-center justify-center text-[#B5502F] shadow-xs group-hover:border-[#B5502F] transition-colors">
-              <Palette className="w-5 h-5" />
-            </div>
+            <img
+              src={logoImage}
+              alt="Arthur Visions Logo"
+              className="w-10 h-10 rounded-full object-cover border border-[#DDD3C3] shadow-xs group-hover:border-[#B5502F] transition-colors"
+            />
             <div>
               <span className="block font-serif text-2xl font-bold tracking-wide text-[#1F1D1B] group-hover:text-[#B5502F] transition-colors">
                 Arthur Visions

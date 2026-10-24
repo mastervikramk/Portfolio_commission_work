@@ -39,36 +39,58 @@ export default function Recognition({ onOpenLightbox }) {
           {DIGNITARIES.map((item, idx) => (
             <div
               key={idx}
-              className="bg-white rounded-2xl overflow-hidden border border-[#DDD3C3] shadow-xs hover:shadow-md transition-all flex flex-col justify-between group"
+              onClick={() => onOpenLightbox({ ...item, title: item.name })}
+              className="bg-white rounded-2xl overflow-hidden border border-[#DDD3C3] shadow-xs hover:shadow-lg transition-all duration-300 flex flex-col justify-between group cursor-pointer"
             >
-              <div className="p-6 space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="px-3 py-1 rounded-full text-[11px] font-semibold bg-[#FBF5E6] text-[#C99A2E] border border-[#C99A2E]/30">
-                    {item.badge}
-                  </span>
-                  <Award className="w-5 h-5 text-[#C99A2E]" />
+              <div>
+                {/* Dignitary Felicitation Photograph */}
+                <div className="relative aspect-4/3 bg-[#1A1816] overflow-hidden">
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute top-3 left-3">
+                    <span className="px-3 py-1 rounded-full text-[11px] font-semibold bg-[#FAF7F2]/95 backdrop-blur-xs text-[#C99A2E] border border-[#C99A2E]/40 shadow-xs">
+                      {item.badge}
+                    </span>
+                  </div>
+                  <div className="absolute top-3 right-3 p-1.5 rounded-full bg-[#1F1D1B]/70 text-white backdrop-blur-xs shadow-xs">
+                    <Award className="w-4 h-4 text-[#C99A2E]" />
+                  </div>
+                  <div className="absolute inset-0 bg-[#1F1D1B]/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <div className="px-4 py-2 rounded-full bg-[#FAF7F2] text-[#1F1D1B] text-xs font-semibold flex items-center gap-1.5 shadow-md">
+                      <ZoomIn className="w-4 h-4 text-[#B5502F]" />
+                      <span>View Full Photo</span>
+                    </div>
+                  </div>
                 </div>
 
-                <div>
-                  <h3 className="font-serif text-xl font-bold text-[#1F1D1B] group-hover:text-[#B5502F] transition-colors">
-                    {item.name}
-                  </h3>
-                  <p className="text-xs font-semibold text-[#B5502F] mt-0.5">
-                    {item.role}
-                  </p>
-                  <p className="text-[11px] text-[#5A554F] italic mt-0.5">
-                    {item.event}
+                <div className="p-6 space-y-3">
+                  <div>
+                    <h3 className="font-serif text-xl font-bold text-[#1F1D1B] group-hover:text-[#B5502F] transition-colors">
+                      {item.name}
+                    </h3>
+                    <p className="text-xs font-semibold text-[#B5502F] mt-0.5">
+                      {item.role}
+                    </p>
+                    <p className="text-[11px] text-[#5A554F] italic mt-0.5">
+                      {item.event}
+                    </p>
+                  </div>
+
+                  <p className="text-xs text-[#5A554F] leading-relaxed">
+                    {item.description}
                   </p>
                 </div>
-
-                <p className="text-xs text-[#5A554F] leading-relaxed">
-                  {item.description}
-                </p>
               </div>
 
-              <div className="bg-[#FAF7F2] px-6 py-3 border-t border-[#DDD3C3]/60 text-[11px] text-[#5A554F] flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-[#6B7F5E]" />
-                <span>Verified Public Felicitation</span>
+              <div className="bg-[#FAF7F2] px-6 py-3 border-t border-[#DDD3C3]/60 text-[11px] text-[#5A554F] flex items-center justify-between">
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#6B7F5E]" />
+                  <span>Verified Public Felicitation</span>
+                </div>
+                <Eye className="w-3.5 h-3.5 text-[#5A554F] group-hover:text-[#B5502F] transition-colors" />
               </div>
             </div>
           ))}
@@ -136,11 +158,11 @@ export default function Recognition({ onOpenLightbox }) {
               onClick={() => onOpenLightbox(cert)}
               className="bg-white rounded-2xl overflow-hidden border border-[#DDD3C3] shadow-2xs hover:shadow-lg transition-all duration-300 group cursor-pointer flex flex-col"
             >
-              <div className="relative aspect-4/3 bg-[#1F1D1B] overflow-hidden">
+              <div className="relative aspect-4/3 bg-[#1A1816] flex items-center justify-center p-2 overflow-hidden">
                 <img
                   src={cert.image}
                   alt={cert.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-95 group-hover:opacity-100"
+                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-[#1F1D1B]/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                   <div className="px-4 py-2 rounded-full bg-[#FAF7F2] text-[#1F1D1B] text-xs font-semibold flex items-center gap-1.5 shadow-md">

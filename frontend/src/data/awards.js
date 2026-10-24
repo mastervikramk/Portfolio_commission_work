@@ -1,3 +1,19 @@
+import niftCert from '../assets/nift.jpeg';
+import yuwaUtsavCert from '../assets/Yuwa_utsav.jpeg';
+import vajjikaSammanCert from '../assets/vajjika_vibhuti_samman.jpeg';
+import artCarnivalCert from '../assets/Art_carnival.jpeg';
+import jankiVallabhCert from '../assets/Acharya_Janki_vallabh.jpeg';
+import stateYuwaCert from '../assets/state_level_yuwa_utsav.jpeg';
+import udyogVibhagCert from '../assets/Udyog_vibhag.jpeg';
+
+import dulariDeviImg from '../assets/Padmashri_Dulari_Devi.jpeg';
+import ujjwalAnkurImg from '../assets/Ujjwal_ankur.jpeg';
+import vijaySinhaImg from '../assets/Vijay_kumar_sinha.jpeg';
+import rajbhushanImg from '../assets/RajBhushan_chaudhari.jpeg';
+import arunPrasadImg from '../assets/Arun_shanka_prasad.jpeg';
+import nirmalaSahuImg from '../assets/Nirmala_sahu.jpeg';
+import ajayNishadImg from '../assets/Ajay_nishad.jpeg';
+
 export const DIGNITARIES = [
   {
     name: "Padma Shri Dulari Devi",
@@ -5,7 +21,7 @@ export const DIGNITARIES = [
     event: "Felicitation & Blessing for Traditional Bihar Folk Art",
     description: "Honored with blessings and words of appreciation for dedication to regional art forms and mastering traditional motifs.",
     badge: "National Honor",
-    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80"
+    image: dulariDeviImg
   },
   {
     name: "Dr. Ujjawal Ankur",
@@ -13,7 +29,7 @@ export const DIGNITARIES = [
     event: "Academic Mentorship & Guidance under Ministry of Textiles",
     description: "Mentored in technical design aesthetics, materiality, and advanced craft preservation methodologies.",
     badge: "NIFT Delhi Mentorship",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80"
+    image: ujjwalAnkurImg
   },
   {
     name: "Shri Vijay Kumar Sinha",
@@ -21,7 +37,7 @@ export const DIGNITARIES = [
     event: "State Cultural Recognition",
     description: "Felicitated for exemplary youth representation in fine arts and state cultural preservation.",
     badge: "State Dignitary",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80"
+    image: vijaySinhaImg
   },
   {
     name: "Dr. Rajbhushan Choudhary",
@@ -29,7 +45,7 @@ export const DIGNITARIES = [
     event: "Public Felicitation for Art Excellence",
     description: "Recognized as an outstanding young artist representing Bihar's talent on state and national platforms.",
     badge: "Parliamentary Felicitation",
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=600&q=80"
+    image: rajbhushanImg
   },
   {
     name: "Shri Arun Shankar Prasad",
@@ -37,7 +53,7 @@ export const DIGNITARIES = [
     event: "Departmental Cultural Honors",
     description: "Awarded appreciation by the Department of Art, Culture and Youth Affairs for exceptional artistic finesse.",
     badge: "Art & Culture Ministry",
-    image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=600&q=80"
+    image: arunPrasadImg
   },
   {
     name: "Smt. Nirmala Sahu",
@@ -45,7 +61,7 @@ export const DIGNITARIES = [
     event: "Civic Honor & Youth Icon Recognition",
     description: "Recognized as a leading young creative force of Muzaffarpur city for winning laurels in painting.",
     badge: "City Honor",
-    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80"
+    image: nirmalaSahuImg
   },
   {
     name: "Shri Ajay Nishad",
@@ -53,7 +69,7 @@ export const DIGNITARIES = [
     event: "Regional Youth Artist Recognition",
     description: "Felicitated for district-level first rank achievements and promotion of folk art traditions.",
     badge: "Distinguished Public Honor",
-    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=600&q=80"
+    image: ajayNishadImg
   }
 ];
 
@@ -109,7 +125,7 @@ export const CERTIFICATES = [
     sub: "Workshop on Materiality & Design Exploration under Dr. Ujjawal Ankur",
     year: "2024",
     issuer: "National Institute of Fashion Technology, New Delhi",
-    image: "https://images.unsplash.com/photo-1589330694653-dad6bc01cf0e?auto=format&fit=crop&w=1000&q=80"
+    image: niftCert
   },
   {
     id: "cert-2",
@@ -117,7 +133,7 @@ export const CERTIFICATES = [
     sub: "Painting Competition (Rank 1)",
     year: "2024",
     issuer: "Art, Culture & Youth Dept., Govt. of Bihar",
-    image: "https://images.unsplash.com/photo-1589330694653-dad6bc01cf0e?auto=format&fit=crop&w=1000&q=80"
+    image: yuwaUtsavCert
   },
   {
     id: "cert-3",
@@ -125,7 +141,7 @@ export const CERTIFICATES = [
     sub: "Excellence in Regional Vajjika Art & Culture",
     year: "2025",
     issuer: "Vaishali Heritage Foundation",
-    image: "https://images.unsplash.com/photo-1589330694653-dad6bc01cf0e?auto=format&fit=crop&w=1000&q=80"
+    image: vajjikaSammanCert
   },
   {
     id: "cert-4",
@@ -133,7 +149,7 @@ export const CERTIFICATES = [
     sub: "Exhibitor & Live Demonstration Certificate",
     year: "2025",
     issuer: "Muzaffarpur Art & Culture Committee",
-    image: "https://images.unsplash.com/photo-1589330694653-dad6bc01cf0e?auto=format&fit=crop&w=1000&q=80"
+    image: artCarnivalCert
   },
   {
     id: "cert-5",
@@ -141,7 +157,7 @@ export const CERTIFICATES = [
     sub: "Fine Art Merit Citation",
     year: "2025",
     issuer: "Cultural Academy Muzaffarpur",
-    image: "https://images.unsplash.com/photo-1589330694653-dad6bc01cf0e?auto=format&fit=crop&w=1000&q=80"
+    image: jankiVallabhCert
   },
   {
     id: "cert-6",
@@ -149,7 +165,7 @@ export const CERTIFICATES = [
     sub: "State Level Painting Delegation",
     year: "2025",
     issuer: "State Youth Affairs Directorate, Bihar",
-    image: "https://images.unsplash.com/photo-1589330694653-dad6bc01cf0e?auto=format&fit=crop&w=1000&q=80"
+    image: stateYuwaCert
   },
   {
     id: "cert-7",
@@ -157,7 +173,7 @@ export const CERTIFICATES = [
     sub: "Artisan & Creative Enterprise Certificate",
     year: "2024",
     issuer: "Department of Industries, Govt. of Bihar",
-    image: "https://images.unsplash.com/photo-1589330694653-dad6bc01cf0e?auto=format&fit=crop&w=1000&q=80"
+    image: udyogVibhagCert
   }
 ];
 

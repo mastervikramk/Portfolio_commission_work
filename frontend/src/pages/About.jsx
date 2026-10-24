@@ -1,6 +1,7 @@
 import React from 'react';
 import { Palette, Award, BookOpen, Heart, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { YoutubeIcon } from '../components/SocialIcons';
+import profileImage from '../assets/profile.jpeg';
 
 export default function About({ setActivePage }) {
   return (
@@ -16,7 +17,7 @@ export default function About({ setActivePage }) {
             <div className="relative bg-white p-4 rounded-3xl shadow-xl border border-[#DDD3C3]">
               <div className="relative aspect-4/5 rounded-2xl overflow-hidden bg-[#1F1D1B]">
                 <img
-                  src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=1000&q=80"
+                  src={profileImage}
                   alt="Vinita - Arthur Visions Fine Artist"
                   className="w-full h-full object-cover"
                 />
@@ -81,7 +82,7 @@ export default function About({ setActivePage }) {
               Cultural Preservation
             </span>
             <h2 className="font-serif text-3xl font-bold text-[#1F1D1B]">
-              The Heart of Vajjika Art (वैज्जिका कला)
+              The Heart of Vajjika Art (वज्जिका कला)
             </h2>
             <p className="text-sm sm:text-base text-[#5A554F] leading-relaxed">
               While Madhubani and Mithila art have gained worldwide renown, the historical <strong>Vajjika art tradition</strong> of the ancient Vaishali republic remains an underrepresented jewel of Bihar. Characterized by earthen natural motifs, sacred geometry, flora, and domestic folk rituals, Vajjika art carries the spiritual pulse of north Bihar.

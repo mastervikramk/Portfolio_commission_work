@@ -157,9 +157,9 @@ export default function Gallery({ artworks, onOpenLightbox, onOrderSimilar }) {
                   </button>
 
                   <a
-                    href={`https://wa.me/${SITE_CONFIG.whatsappNumber}?text=${encodeURIComponent(
+                    href={SITE_CONFIG.getWhatsAppUrl(
                       `Hi Vinita, I saw your artwork "${art.title}" (${art.medium}) on your website. I want to inquire about purchasing or commissioning a similar piece.`
-                    )}`}
+                    )}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="py-2.5 px-3 rounded-xl bg-[#25D366] hover:bg-[#20ba59] text-white font-semibold transition-colors flex items-center justify-center gap-1"

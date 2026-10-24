@@ -17,5 +17,9 @@ bucket_name = "arthurvisions-storage"
 # Variables
 [vars]
 ADMIN_PIN = "2025"
-ARTIST_EMAIL = "arthurvisions521@gmail.com"
+# Private recipient email (never exposed to frontend/visitors; Cloudflare routes forms here)
+ARTIST_EMAIL = "shinkodha@gmail.com"
+# WhatsApp redirect destination (can be a phone number like "918207442286" or a WhatsApp Business short link "https://wa.me/message/YOUR_CODE")
+WHATSAPP_TARGET = "918207442286"
+
 

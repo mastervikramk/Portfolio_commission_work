@@ -3,9 +3,7 @@ import { MessageCircle } from 'lucide-react';
 import { SITE_CONFIG } from '../config/site';
 
 export default function WhatsAppButton({ customMessage = "Hi Vinita, I saw your artwork on Arthur Visions website and would like to inquire about a custom portrait commission." }) {
-  const phoneNumber = SITE_CONFIG.whatsappNumber;
-  const encodedMessage = encodeURIComponent(customMessage);
-  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+  const whatsappUrl = SITE_CONFIG.getWhatsAppUrl(customMessage);
 
   return (
     <aside aria-label="Quick contact" className="fixed bottom-6 right-6 z-40">

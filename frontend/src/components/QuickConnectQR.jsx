@@ -10,8 +10,8 @@ export default function QuickConnectQR() {
     whatsapp: {
       title: "Chat on WhatsApp",
       handle: "Arthur Visions Studio Chat",
-      url: `https://wa.me/${SITE_CONFIG.whatsappNumber}?text=${encodeURIComponent("Hi Vinita, I am visiting Arthur Visions website and would like to discuss an artwork.")}`,
-      qrUrl: `https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=10&data=${encodeURIComponent(`https://wa.me/${SITE_CONFIG.whatsappNumber}?text=Hi Vinita, I am visiting Arthur Visions`)}`,
+      url: SITE_CONFIG.getWhatsAppUrl("Hi Vinita, I am visiting Arthur Visions website and would like to discuss an artwork."),
+      qrUrl: `https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=10&data=${encodeURIComponent(SITE_CONFIG.getAbsoluteWhatsAppUrl("Hi Vinita, I am visiting Arthur Visions"))}`,
       color: "#25D366",
       actionText: "Scan to open WhatsApp chat directly on your phone",
       badge: "Fastest Response"
