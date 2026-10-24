@@ -13,6 +13,7 @@ import Contact from './pages/Contact';
 import Admin from './pages/Admin';
 
 import { ARTWORKS_DATA } from './data/artworks';
+import { DIGNITARIES, TIMELINE_AWARDS, CERTIFICATES } from './data/awards';
 
 export default function App() {
   const [activePage, setActivePage] = useState('home');
@@ -35,6 +36,43 @@ export default function App() {
       // ignore parsing error
     }
     return ARTWORKS_DATA;
+  });
+
+  const [dignitaries, setDignitaries] = useState(() => {
+    try {
+      const saved = localStorage.getItem('arthurvisions_custom_dignitaries');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {}
+    return DIGNITARIES;
+  });
+
+  const [timelineAwards, setTimelineAwards] = useState(() => {
+    try {
+      const saved = localStorage.getItem('arthurvisions_custom_timeline');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {}
+    return TIMELINE_AWARDS;
+  });
+
+  const [certificates, setCertificates] = useState(() => {
+    try {
+      const saved = localStorage.getItem('arthurvisions_custom_certificates');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      }
+    } catch (e) {
+      // ignore parsing error
+    }
+    return CERTIFICATES;
   });
   const [selectedArtConfig, setSelectedArtConfig] = useState(null);
   const [lightboxItem, setLightboxItem] = useState(null);
@@ -96,6 +134,9 @@ export default function App() {
 
         {activePage === 'recognition' && (
           <Recognition
+            dignitaries={dignitaries}
+            timelineAwards={timelineAwards}
+            certificates={certificates}
             onOpenLightbox={(item) => setLightboxItem(item)}
           />
         )}
@@ -112,6 +153,12 @@ export default function App() {
           <Admin
             artworks={artworks}
             setArtworks={setArtworks}
+            dignitaries={dignitaries}
+            setDignitaries={setDignitaries}
+            timelineAwards={timelineAwards}
+            setTimelineAwards={setTimelineAwards}
+            certificates={certificates}
+            setCertificates={setCertificates}
           />
         )}
       </main>

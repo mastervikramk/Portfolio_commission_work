@@ -11,6 +11,7 @@ export default function Order({ initialConfig, onOrderSuccess }) {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
+    email: '',
     city: '',
     medium: initialConfig?.medium || 'Charcoal & Pencil Sketch',
     size: initialConfig?.size || 'A3',
@@ -51,9 +52,42 @@ export default function Order({ initialConfig, onOrderSuccess }) {
 
     // Prepare payload
     try {
+      // 1. Send direct email notification to artist's Gmail via Web3Forms
+      try {
+        const emailPayload = new FormData();
+        emailPayload.append('access_key', '3c1f0fa8-385b-42da-9fb4-cbd1b6e39e17');
+        emailPayload.append('subject', `🎨 [New Order Inquiry] ${formData.name} - ${formData.medium} (${formData.size})`);
+        emailPayload.append('from_name', 'Arthur Visions Order Studio');
+        emailPayload.append('Client Name', formData.name);
+        emailPayload.append('WhatsApp Phone', formData.phone);
+        if (formData.email) {
+          emailPayload.append('Email Address', formData.email);
+        }
+        emailPayload.append('Delivery City & State', formData.city);
+        emailPayload.append('Artwork Medium', formData.medium);
+        emailPayload.append('Canvas / Paper Size', formData.size);
+        emailPayload.append('Number of Faces / Subjects', formData.subjects.toString());
+        emailPayload.append('Occasion', formData.occasion);
+        emailPayload.append('Target Date / Deadline', formData.deadline || 'Flexible');
+        emailPayload.append('Special Instructions / Notes', formData.notes || 'None');
+        if (formData.photo) {
+          emailPayload.append('attachment', formData.photo);
+        }
+
+        await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          body: emailPayload,
+        }).catch((e) => console.error('Web3Forms Order email error:', e));
+      } catch (emailErr) {
+        console.error('Web3Forms dispatch error:', emailErr);
+      }
+
       const data = new FormData();
       data.append('name', formData.name);
       data.append('phone', formData.phone);
+      if (formData.email) {
+        data.append('email', formData.email);
+      }
       data.append('city', formData.city);
       data.append('medium', formData.medium);
       data.append('size', formData.size);
@@ -66,16 +100,17 @@ export default function Order({ initialConfig, onOrderSuccess }) {
       }
 
       // Try posting to local/Cloudflare Worker endpoint
-      const response = await fetch('/api/order', {
+      await fetch('/api/order', {
         method: 'POST',
         body: data,
       }).catch(() => null);
 
-      // If backend responded, or even if demo mode, save to localStorage for Admin view
+      // Save to localStorage for Admin view
       const newOrder = {
         id: `ORD-${Date.now().toString().slice(-5)}`,
         name: formData.name,
         phone: formData.phone,
+        email: formData.email,
         city: formData.city,
         medium: formData.medium,
         size: formData.size,
@@ -219,7 +254,7 @@ export default function Order({ initialConfig, onOrderSuccess }) {
               </div>
 
               {/* Personal Info */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div>
                   <label className="block text-xs font-semibold uppercase tracking-wider text-[#5A554F] mb-1.5">
                     Your Name *
@@ -250,7 +285,20 @@ export default function Order({ initialConfig, onOrderSuccess }) {
 
                 <div>
                   <label className="block text-xs font-semibold uppercase tracking-wider text-[#5A554F] mb-1.5">
-                    City & State *
+                    Email Address (Optional)
+                  </label>
+                  <input
+                    type="email"
+                    placeholder="you@example.com"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#DDD3C3] text-sm text-[#1F1D1B] focus:outline-none focus:ring-2 focus:ring-[#B5502F]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#5A554F] mb-1.5">
+                    Delivery City & State *
                   </label>
                   <input
                     type="text"

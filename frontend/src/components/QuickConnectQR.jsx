@@ -3,20 +3,25 @@ import { QrCode, MessageCircle, Mail, ExternalLink, Smartphone } from 'lucide-re
 import { YoutubeIcon, InstagramIcon } from './SocialIcons';
 import { SITE_CONFIG } from '../config/site';
 
-export default function QuickConnectQR() {
+export default function QuickConnectQR({ selectedTopic = "Custom Portrait Commission" }) {
   const [activeTab, setActiveTab] = useState('whatsapp');
+
+  const whatsappMessage = `Hi Vinita, I am reaching out regarding ${selectedTopic} via Arthur Visions website.`;
+  const emailSubject = `[Inquiry] ${selectedTopic} - Arthur Visions`;
+  const emailBody = `Hi Vinita,\n\nI am contacting you from the Arthur Visions website regarding: ${selectedTopic}.\n\nDetails / Questions:\n\nLooking forward to hearing from you.`;
+  const emailUrl = `mailto:${SITE_CONFIG.publicEmail}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
 
   const qrChannels = {
     whatsapp: {
       title: "Chat on WhatsApp",
       shortName: "WhatsApp",
       handle: "Arthur Visions Studio (Online)",
-      url: SITE_CONFIG.getWhatsAppUrl("Hi Vinita, I am visiting Arthur Visions website and would like to discuss an artwork."),
-      qrUrl: `https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=12&ecc=M&data=${encodeURIComponent(SITE_CONFIG.getAbsoluteWhatsAppUrl("Hi Vinita, I am visiting Arthur Visions website and would like to discuss an artwork."))}`,
+      url: SITE_CONFIG.getWhatsAppUrl(whatsappMessage),
+      qrUrl: `https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=12&ecc=M&data=${encodeURIComponent(SITE_CONFIG.getAbsoluteWhatsAppUrl(whatsappMessage))}`,
       color: "#25D366",
       buttonClass: "bg-[#25D366] hover:bg-[#20ba59] text-white shadow-sm",
       activeTabClass: "bg-[#25D366] text-white shadow-sm font-bold",
-      actionText: "Scan with your phone camera to open WhatsApp chat directly, or click the button below.",
+      actionText: `Scan with your phone to start WhatsApp chat about "${selectedTopic}", or click the button below.`,
       badge: "Fastest Response"
     },
     instagram: {
@@ -28,7 +33,7 @@ export default function QuickConnectQR() {
       color: "#E1306C",
       buttonClass: "bg-gradient-to-r from-[#833AB4] via-[#FD1D1D] to-[#F77737] hover:opacity-95 text-white shadow-sm",
       activeTabClass: "bg-gradient-to-r from-[#833AB4] via-[#FD1D1D] to-[#F77737] text-white shadow-sm font-bold",
-      actionText: "Scan with your phone to view artwork reels and stories, or click below to open our profile.",
+      actionText: "Scan with your phone to view recent artwork reels and DM us on Instagram, or click below.",
       badge: "Art Feed"
     },
     youtube: {
@@ -40,19 +45,19 @@ export default function QuickConnectQR() {
       color: "#FF0000",
       buttonClass: "bg-[#FF0000] hover:bg-[#d90000] text-white shadow-sm",
       activeTabClass: "bg-[#FF0000] text-white shadow-sm font-bold",
-      actionText: "Scan with your phone to watch creation time-lapses, or click below to visit channel.",
+      actionText: "Scan with your phone to watch creation time-lapses and tutorials, or click below to visit channel.",
       badge: "Videos & Reels"
     },
     email: {
       title: "Official Studio Email",
       shortName: "Email",
       handle: SITE_CONFIG.publicEmail,
-      url: `mailto:${SITE_CONFIG.publicEmail}?subject=Artwork%20Inquiry%20-%20Arthur%20Visions`,
-      qrUrl: `https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=12&ecc=M&data=${encodeURIComponent(`mailto:${SITE_CONFIG.publicEmail}?subject=Artwork Inquiry - Arthur Visions`)}`,
+      url: emailUrl,
+      qrUrl: `https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=12&ecc=M&data=${encodeURIComponent(emailUrl)}`,
       color: "#EA4335",
       buttonClass: "bg-[#EA4335] hover:bg-[#d3382b] text-white shadow-sm",
       activeTabClass: "bg-[#EA4335] text-white shadow-sm font-bold",
-      actionText: "Scan to compose a direct email inquiry on your phone, or click below to launch your email app.",
+      actionText: `Scan to open your phone's email app pre-filled for "${selectedTopic}", or click below.`,
       badge: "Official Desk"
     }
   };

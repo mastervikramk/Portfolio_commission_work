@@ -2,7 +2,12 @@ import React, { useState } from 'react';
 import { DIGNITARIES, TIMELINE_AWARDS, CERTIFICATES } from '../data/awards';
 import { Award, ShieldCheck, Calendar, Eye, ZoomIn, CheckCircle2 } from 'lucide-react';
 
-export default function Recognition({ onOpenLightbox }) {
+export default function Recognition({ 
+  dignitaries = DIGNITARIES, 
+  timelineAwards = TIMELINE_AWARDS, 
+  certificates = CERTIFICATES, 
+  onOpenLightbox 
+}) {
   const [selectedCert, setSelectedCert] = useState(null);
 
   return (
@@ -36,9 +41,9 @@ export default function Recognition({ onOpenLightbox }) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {DIGNITARIES.map((item, idx) => (
+          {dignitaries.map((item, idx) => (
             <div
-              key={idx}
+              key={item.id || idx}
               onClick={() => onOpenLightbox({ ...item, title: item.name })}
               className="bg-white rounded-2xl overflow-hidden border border-[#DDD3C3] shadow-xs hover:shadow-lg transition-all duration-300 flex flex-col justify-between group cursor-pointer"
             >
@@ -109,8 +114,8 @@ export default function Recognition({ onOpenLightbox }) {
         </div>
 
         <div className="relative pl-6 sm:pl-8 border-l-2 border-[#DDD3C3] space-y-10">
-          {TIMELINE_AWARDS.map((award, idx) => (
-            <div key={idx} className="relative group">
+          {timelineAwards.map((award, idx) => (
+            <div key={award.id || idx} className="relative group">
               {/* Bullet Dot */}
               <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-[#B5502F] border-4 border-white shadow-xs group-hover:scale-125 transition-transform" />
 
@@ -152,7 +157,7 @@ export default function Recognition({ onOpenLightbox }) {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {CERTIFICATES.map((cert) => (
+          {certificates.map((cert) => (
             <div
               key={cert.id}
               onClick={() => onOpenLightbox(cert)}
