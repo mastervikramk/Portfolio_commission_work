@@ -96,40 +96,59 @@ export default function Admin({
   // Check existing session token on mount
   useEffect(() => {
     const savedToken = localStorage.getItem('arthurvisions_admin_session') || sessionStorage.getItem('arthurvisions_admin_session');
+    const savedPin = localStorage.getItem('arthurvisions_admin_pin') || sessionStorage.getItem('arthurvisions_admin_pin');
     
     if (savedToken) {
-      fetch('/api/admin/verify-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sessionToken: savedToken })
-      })
+      const parts = savedToken.split('.');
+      const expiresAt = parts.length === 3 ? parseInt(parts[1], 10) : 0;
+      
+      // If token is still within its 30-day validity window, unlock immediately (no delay/flicker)
+      if (expiresAt > Date.now()) {
+        setIsAuthenticated(true);
+
+        // Verify with server in background
+        fetch('/api/admin/verify-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sessionToken: savedToken })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.valid === false) {
+            localStorage.removeItem('arthurvisions_admin_session');
+            sessionStorage.removeItem('arthurvisions_admin_session');
+            setIsAuthenticated(false);
+          }
+        })
+        .catch(() => {
+          // If offline or network lag, keep user authenticated
+        });
+      } else {
+        localStorage.removeItem('arthurvisions_admin_session');
+        sessionStorage.removeItem('arthurvisions_admin_session');
+      }
+    } else if (savedPin === '2025' || savedPin === '1234') {
+      setIsAuthenticated(true);
+    }
+
+    // Load orders from Cloudflare KV (with localStorage fallback)
+    fetch('/api/admin/orders')
       .then(res => res.json())
       .then(data => {
-        if (data && data.valid) {
-          setIsAuthenticated(true);
-        } else {
-          // If token expired, clear it
-          localStorage.removeItem('arthurvisions_admin_session');
-          sessionStorage.removeItem('arthurvisions_admin_session');
+        if (data && Array.isArray(data.orders)) {
+          const local = JSON.parse(localStorage.getItem('arthurvisions_orders') || '[]');
+          const map = new Map();
+          data.orders.forEach(o => map.set(o.id, o));
+          local.forEach(o => { if (!map.has(o.id)) map.set(o.id, o); });
+          const merged = Array.from(map.values());
+          setOrders(merged);
+          localStorage.setItem('arthurvisions_orders', JSON.stringify(merged));
         }
       })
       .catch(() => {
-        // Fallback offline validation
-        const parts = savedToken.split('.');
-        if (parts.length === 3 && parseInt(parts[1], 10) > Date.now()) {
-          setIsAuthenticated(true);
-        }
+        const savedOrders = JSON.parse(localStorage.getItem('arthurvisions_orders') || '[]');
+        setOrders(savedOrders);
       });
-    } else {
-      const savedPin = sessionStorage.getItem('arthurvisions_admin_pin');
-      if (savedPin === '2025' || savedPin === '1234') {
-        setIsAuthenticated(true);
-      }
-    }
-
-    // Load orders from localStorage
-    const savedOrders = JSON.parse(localStorage.getItem('arthurvisions_orders') || '[]');
-    setOrders(savedOrders);
   }, []);
 
   // Cooldown countdown timer for resending OTP
@@ -213,6 +232,7 @@ export default function Admin({
     e.preventDefault();
     if (pin === '2025' || pin === '1234') {
       setIsAuthenticated(true);
+      localStorage.setItem('arthurvisions_admin_pin', pin);
       sessionStorage.setItem('arthurvisions_admin_pin', pin);
       setPinError(false);
     } else {
@@ -312,6 +332,28 @@ export default function Admin({
     });
     setOrders(updatedOrders);
     localStorage.setItem('arthurvisions_orders', JSON.stringify(updatedOrders));
+
+    // Sync to Cloudflare KV for cross-device synchronization
+    fetch('/api/admin/orders/update-status', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ orderId, status: newStatus })
+    }).catch(() => {});
+  };
+
+  const handleDeleteOrder = (orderId) => {
+    if (window.confirm('Are you sure you want to delete this customer inquiry?')) {
+      const updatedOrders = orders.filter(ord => ord.id !== orderId);
+      setOrders(updatedOrders);
+      localStorage.setItem('arthurvisions_orders', JSON.stringify(updatedOrders));
+
+      // Sync deletion to Cloudflare KV
+      fetch('/api/admin/orders/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId })
+      }).catch(() => {});
+    }
   };
 
   // Certificate handlers
@@ -1849,6 +1891,14 @@ export default function Admin({
                       <MessageSquare className="w-3.5 h-3.5 fill-current" />
                       <span>Reply on WhatsApp</span>
                     </a>
+
+                    <button
+                      onClick={() => handleDeleteOrder(ord.id)}
+                      className="p-2 rounded-xl text-red-600 hover:bg-red-50 border border-transparent hover:border-red-200 cursor-pointer transition-colors"
+                      title="Delete customer inquiry"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
                   </div>
                 </div>
               ))}

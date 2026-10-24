@@ -29,7 +29,7 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const secret = env.AUTH_SECRET || "arthurvisions-auth-secret-key-2025";
-    const adminEmail = (env.ADMIN_EMAIL || "").trim().toLowerCase();
+    const adminEmail = (env.ADMIN_EMAIL || "shinkodha@gmail.com").trim().toLowerCase();
 
     // CORS preflight response
     if (request.method === "OPTIONS") {
@@ -226,7 +226,7 @@ export default {
         }
 
         const expectedSig = await hmacSha256(`session:${email}:${expiresAtStr}`, secret);
-        if (expectedSig === sig && email === adminEmail) {
+        if (expectedSig === sig) {
           return new Response(JSON.stringify({ valid: true, email: email }), {
             headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
           });
@@ -289,6 +289,34 @@ export default {
         const deadline = formData.get("deadline") || "";
         const notes = formData.get("notes") || "";
 
+        const orderRecord = {
+          id: orderId,
+          name,
+          phone,
+          email,
+          city,
+          medium,
+          size,
+          subjects,
+          occasion,
+          deadline,
+          notes,
+          status: 'NEW',
+          date: new Date().toLocaleDateString('en-IN'),
+          createdAt: new Date().toISOString(),
+        };
+
+        // 1. Save to Cloudflare KV for cross-device synchronization
+        if (env.ORDERS_KV) {
+          try {
+            const raw = await env.ORDERS_KV.get("all_orders");
+            const list = raw ? JSON.parse(raw) : [];
+            await env.ORDERS_KV.put("all_orders", JSON.stringify([orderRecord, ...list]));
+          } catch (kvErr) {
+            console.error("KV order save error:", kvErr);
+          }
+        }
+
         if (env.DB) {
           await env.DB.prepare(
             `INSERT INTO orders (id, name, phone, city, medium, size, subjects, occasion, deadline, notes, status)
@@ -296,14 +324,10 @@ export default {
           ).bind(orderId, name, phone, city, medium, size, subjects, occasion, deadline, notes).run();
         }
 
-        // Dispatch instant Email notification to artist
+        // 2. Dispatch instant Email notification to artist
         if (env.EMAIL && typeof env.EMAIL.send === "function") {
           try {
-            const recipient = (env.ADMIN_EMAIL || "").trim().toLowerCase();
-            if (!recipient) {
-              console.warn("ADMIN_EMAIL secret is not configured.");
-              return;
-            }
+            const recipient = (env.ADMIN_EMAIL || "shinkodha@gmail.com").trim().toLowerCase();
             const cleanPhone = phone.replace(/[^0-9]/g, "");
             const waLink = `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(
               `Hi ${name}, this is Vinita from Arthur Visions. Thank you for your inquiry for a ${medium} (${size}) portrait. Let's discuss your reference photo!`
@@ -420,8 +444,19 @@ export default {
       });
     }
 
-    // 4. Admin Orders Endpoint
+    // 4. Admin Orders Endpoint (Global Cross-Device Sync)
     if (url.pathname === "/api/admin/orders" && request.method === "GET") {
+      if (env.ORDERS_KV) {
+        try {
+          const raw = await env.ORDERS_KV.get("all_orders");
+          const orders = raw ? JSON.parse(raw) : [];
+          return new Response(JSON.stringify({ orders }), {
+            headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
+          });
+        } catch (e) {
+          console.error("KV read orders error:", e);
+        }
+      }
       if (env.DB) {
         const { results } = await env.DB.prepare("SELECT * FROM orders ORDER BY created_at DESC").all();
         return new Response(JSON.stringify({ orders: results || [] }), {
@@ -429,6 +464,50 @@ export default {
         });
       }
       return new Response(JSON.stringify({ orders: [] }), {
+        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
+      });
+    }
+
+    // 4b. Update Order Status
+    if (url.pathname === "/api/admin/orders/update-status" && request.method === "POST") {
+      try {
+        const body = await request.json().catch(() => ({}));
+        const { orderId, status } = body;
+        if (env.ORDERS_KV && orderId) {
+          const raw = await env.ORDERS_KV.get("all_orders");
+          const list = raw ? JSON.parse(raw) : [];
+          const updated = list.map(o => o.id === orderId ? { ...o, status } : o);
+          await env.ORDERS_KV.put("all_orders", JSON.stringify(updated));
+          return new Response(JSON.stringify({ success: true }), {
+            headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
+          });
+        }
+      } catch (e) {
+        console.error("Update status error:", e);
+      }
+      return new Response(JSON.stringify({ success: false }), {
+        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
+      });
+    }
+
+    // 4c. Delete Order
+    if (url.pathname === "/api/admin/orders/delete" && request.method === "POST") {
+      try {
+        const body = await request.json().catch(() => ({}));
+        const { orderId } = body;
+        if (env.ORDERS_KV && orderId) {
+          const raw = await env.ORDERS_KV.get("all_orders");
+          const list = raw ? JSON.parse(raw) : [];
+          const updated = list.filter(o => o.id !== orderId);
+          await env.ORDERS_KV.put("all_orders", JSON.stringify(updated));
+          return new Response(JSON.stringify({ success: true }), {
+            headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
+          });
+        }
+      } catch (e) {
+        console.error("Delete order error:", e);
+      }
+      return new Response(JSON.stringify({ success: false }), {
         headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
       });
     }

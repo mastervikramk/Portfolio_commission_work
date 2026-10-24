@@ -11,6 +11,12 @@
       "name": "EMAIL"
     }
   ],
+  "kv_namespaces": [
+    {
+      "binding": "ORDERS_KV",
+      "id": "e14372b7cc5c44b6b64de70599861079"
+    }
+  ],
   "build": {
     "command": "npm --prefix frontend install && npm --prefix frontend run build"
   },
