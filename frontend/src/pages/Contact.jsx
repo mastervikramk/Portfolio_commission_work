@@ -31,8 +31,26 @@ export default function Contact() {
     const savedMsgs = JSON.parse(localStorage.getItem('arthurvisions_contacts') || '[]');
     localStorage.setItem('arthurvisions_contacts', JSON.stringify([newMsg, ...savedMsgs]));
 
-    // Send to Edge API
+    // Send email notification directly to shinkodha@gmail.com via Web3Forms
     try {
+      await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          access_key: '3c1f0fa8-385b-42da-9fb4-cbd1b6e39e17',
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone || 'Not provided',
+          subject: `[Arthur Visions] ${formData.subject}`,
+          message: formData.message,
+          from_name: 'Arthur Visions Portfolio',
+        }),
+      });
+
+      // Send to Edge API
       const data = new FormData();
       data.append('name', formData.name);
       data.append('email', formData.email);
@@ -105,9 +123,9 @@ export default function Contact() {
                 href={`mailto:${SITE_CONFIG.publicEmail}?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(
                   `Name: ${formData.name}\nEmail: ${formData.email}\n${formData.phone ? `Phone: ${formData.phone}\n` : ''}\nMessage:\n${formData.message}`
                 )}`}
-                className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-white border border-[#DDD3C3] text-xs font-semibold text-[#1F1D1B] hover:bg-[#FAF7F2] flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer"
+                className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-[#EA4335] text-white hover:bg-[#d3382b] font-medium text-xs flex items-center justify-center gap-2 shadow-xs cursor-pointer"
               >
-                <Mail className="w-3.5 h-3.5 text-[#B5502F]" />
+                <Mail className="w-4 h-4" />
                 <span>Open in Email App</span>
               </a>
             </div>

@@ -37,26 +37,26 @@ export default function Footer({ setActivePage }) {
                 href={SITE_CONFIG.youtubeUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="w-9 h-9 rounded-full bg-[#FAF7F2] border border-[#DDD3C3] flex items-center justify-center hover:text-[#B5502F] hover:border-[#B5502F] transition-colors"
+                className="w-9 h-9 rounded-full bg-white border border-[#DDD3C3] flex items-center justify-center hover:border-[#FF0000] hover:scale-105 transition-all shadow-2xs"
                 title={`YouTube: ${SITE_CONFIG.youtubeHandle}`}
               >
-                <YoutubeIcon className="w-4 h-4 text-red-600" />
+                <YoutubeIcon className="w-4 h-4 text-[#FF0000]" />
               </a>
               <a
                 href={SITE_CONFIG.instagramUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="w-9 h-9 rounded-full bg-[#FAF7F2] border border-[#DDD3C3] flex items-center justify-center hover:text-[#B5502F] hover:border-[#B5502F] transition-colors"
+                className="w-9 h-9 rounded-full bg-white border border-[#DDD3C3] flex items-center justify-center hover:border-[#E1306C] hover:scale-105 transition-all shadow-2xs"
                 title={`Instagram: ${SITE_CONFIG.instagramHandle}`}
               >
-                <InstagramIcon className="w-4 h-4 text-[#B5502F]" />
+                <InstagramIcon className="w-4 h-4 text-[#E1306C]" />
               </a>
               <a
                 href={`mailto:${SITE_CONFIG.publicEmail}`}
-                className="w-9 h-9 rounded-full bg-[#FAF7F2] border border-[#DDD3C3] flex items-center justify-center hover:text-[#B5502F] hover:border-[#B5502F] transition-colors"
+                className="w-9 h-9 rounded-full bg-white border border-[#DDD3C3] flex items-center justify-center hover:border-[#EA4335] hover:scale-105 transition-all shadow-2xs"
                 title="Email Studio"
               >
-                <Mail className="w-4 h-4" />
+                <Mail className="w-4 h-4 text-[#EA4335]" />
               </a>
             </div>
           </div>
@@ -150,8 +150,8 @@ export default function Footer({ setActivePage }) {
                 <span>Muzaffarpur, Bihar, India.<br />Delivering across all Indian states & UTs.</span>
               </div>
               <div className="flex items-center gap-2.5">
-                <Mail className="w-4 h-4 text-[#B5502F] shrink-0" />
-                <a href={`mailto:${SITE_CONFIG.publicEmail}`} className="hover:text-[#B5502F] text-xs font-semibold">
+                <Mail className="w-4 h-4 text-[#EA4335] shrink-0" />
+                <a href={`mailto:${SITE_CONFIG.publicEmail}`} className="hover:text-[#EA4335] text-xs font-semibold">
                   {SITE_CONFIG.publicEmail}
                 </a>
               </div>

@@ -10,11 +10,13 @@ export default function QuickConnectQR() {
     whatsapp: {
       title: "Chat on WhatsApp",
       shortName: "WhatsApp",
-      handle: "Arthur Visions Studio Chat",
+      handle: "Arthur Visions Studio (Online)",
       url: SITE_CONFIG.getWhatsAppUrl("Hi Vinita, I am visiting Arthur Visions website and would like to discuss an artwork."),
-      qrUrl: `https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=10&data=${encodeURIComponent(SITE_CONFIG.getAbsoluteWhatsAppUrl("Hi Vinita, I am visiting Arthur Visions"))}`,
+      qrUrl: `https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=12&ecc=M&data=${encodeURIComponent(SITE_CONFIG.getAbsoluteWhatsAppUrl("Hi Vinita, I am visiting Arthur Visions website and would like to discuss an artwork."))}`,
       color: "#25D366",
-      actionText: "Scan to open WhatsApp chat directly on your phone, or click the button to chat now.",
+      buttonClass: "bg-[#25D366] hover:bg-[#20ba59] text-white shadow-sm",
+      activeTabClass: "bg-[#25D366] text-white shadow-sm font-bold",
+      actionText: "Scan with your phone camera to open WhatsApp chat directly, or click the button below.",
       badge: "Fastest Response"
     },
     instagram: {
@@ -22,9 +24,11 @@ export default function QuickConnectQR() {
       shortName: "Instagram",
       handle: SITE_CONFIG.instagramHandle,
       url: SITE_CONFIG.instagramUrl,
-      qrUrl: `https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=10&data=${encodeURIComponent(SITE_CONFIG.instagramUrl)}`,
+      qrUrl: `https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=12&ecc=M&data=${encodeURIComponent(SITE_CONFIG.instagramUrl)}`,
       color: "#E1306C",
-      actionText: "Scan to view recent stories & artwork reels, or click to open our profile.",
+      buttonClass: "bg-gradient-to-r from-[#833AB4] via-[#FD1D1D] to-[#F77737] hover:opacity-95 text-white shadow-sm",
+      activeTabClass: "bg-gradient-to-r from-[#833AB4] via-[#FD1D1D] to-[#F77737] text-white shadow-sm font-bold",
+      actionText: "Scan with your phone to view artwork reels and stories, or click below to open our profile.",
       badge: "Art Feed"
     },
     youtube: {
@@ -32,19 +36,23 @@ export default function QuickConnectQR() {
       shortName: "YouTube",
       handle: SITE_CONFIG.youtubeHandle,
       url: SITE_CONFIG.youtubeUrl,
-      qrUrl: `https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=10&data=${encodeURIComponent(SITE_CONFIG.youtubeUrl)}`,
+      qrUrl: `https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=12&ecc=M&data=${encodeURIComponent(SITE_CONFIG.youtubeUrl)}`,
       color: "#FF0000",
-      actionText: "Scan to watch time-lapse videos & live sketches, or click to visit channel.",
+      buttonClass: "bg-[#FF0000] hover:bg-[#d90000] text-white shadow-sm",
+      activeTabClass: "bg-[#FF0000] text-white shadow-sm font-bold",
+      actionText: "Scan with your phone to watch creation time-lapses, or click below to visit channel.",
       badge: "Videos & Reels"
     },
     email: {
       title: "Official Studio Email",
       shortName: "Email",
       handle: SITE_CONFIG.publicEmail,
-      url: `mailto:${SITE_CONFIG.publicEmail}`,
-      qrUrl: `https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=10&data=${encodeURIComponent(`mailto:${SITE_CONFIG.publicEmail}`)}`,
-      color: "#B5502F",
-      actionText: "Scan to compose a direct email inquiry, or click to launch your email app.",
+      url: `mailto:${SITE_CONFIG.publicEmail}?subject=Artwork%20Inquiry%20-%20Arthur%20Visions`,
+      qrUrl: `https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=12&ecc=M&data=${encodeURIComponent(`mailto:${SITE_CONFIG.publicEmail}?subject=Artwork Inquiry - Arthur Visions`)}`,
+      color: "#EA4335",
+      buttonClass: "bg-[#EA4335] hover:bg-[#d3382b] text-white shadow-sm",
+      activeTabClass: "bg-[#EA4335] text-white shadow-sm font-bold",
+      actionText: "Scan to compose a direct email inquiry on your phone, or click below to launch your email app.",
       badge: "Official Desk"
     }
   };
@@ -89,102 +97,106 @@ export default function QuickConnectQR() {
         </span>
       </div>
 
-      {/* Selector Tabs */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-6">
+      {/* Selector Tabs with Authentic Company Colors */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-6">
         <button
           onClick={() => setActiveTab('whatsapp')}
-          className={`py-2 px-3 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+          className={`py-2.5 px-3 rounded-xl text-xs font-medium flex items-center justify-center gap-2 transition-all cursor-pointer ${
             activeTab === 'whatsapp'
-              ? 'bg-[#25D366] text-white shadow-sm'
-              : 'bg-white text-[#5A554F] border border-[#DDD3C3] hover:bg-[#F0E9DC]'
+              ? qrChannels.whatsapp.activeTabClass
+              : 'bg-white text-[#1F1D1B] border border-[#DDD3C3] hover:border-[#25D366] hover:bg-[#25D366]/5'
           }`}
         >
-          {renderIcon('whatsapp', 'w-4 h-4')}
+          <span className={activeTab === 'whatsapp' ? 'text-white' : 'text-[#25D366]'}>
+            {renderIcon('whatsapp', 'w-4 h-4')}
+          </span>
           <span>WhatsApp</span>
         </button>
 
         <button
           onClick={() => setActiveTab('instagram')}
-          className={`py-2 px-3 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+          className={`py-2.5 px-3 rounded-xl text-xs font-medium flex items-center justify-center gap-2 transition-all cursor-pointer ${
             activeTab === 'instagram'
-              ? 'bg-[#E1306C] text-white shadow-sm'
-              : 'bg-white text-[#5A554F] border border-[#DDD3C3] hover:bg-[#F0E9DC]'
+              ? qrChannels.instagram.activeTabClass
+              : 'bg-white text-[#1F1D1B] border border-[#DDD3C3] hover:border-[#E1306C] hover:bg-[#E1306C]/5'
           }`}
         >
-          {renderIcon('instagram', 'w-4 h-4')}
+          <span className={activeTab === 'instagram' ? 'text-white' : 'text-[#E1306C]'}>
+            {renderIcon('instagram', 'w-4 h-4')}
+          </span>
           <span>Instagram</span>
         </button>
 
         <button
           onClick={() => setActiveTab('youtube')}
-          className={`py-2 px-3 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+          className={`py-2.5 px-3 rounded-xl text-xs font-medium flex items-center justify-center gap-2 transition-all cursor-pointer ${
             activeTab === 'youtube'
-              ? 'bg-red-600 text-white shadow-sm'
-              : 'bg-white text-[#5A554F] border border-[#DDD3C3] hover:bg-[#F0E9DC]'
+              ? qrChannels.youtube.activeTabClass
+              : 'bg-white text-[#1F1D1B] border border-[#DDD3C3] hover:border-[#FF0000] hover:bg-[#FF0000]/5'
           }`}
         >
-          {renderIcon('youtube', 'w-4 h-4')}
+          <span className={activeTab === 'youtube' ? 'text-white' : 'text-[#FF0000]'}>
+            {renderIcon('youtube', 'w-4 h-4')}
+          </span>
           <span>YouTube</span>
         </button>
 
         <button
           onClick={() => setActiveTab('email')}
-          className={`py-2 px-3 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+          className={`py-2.5 px-3 rounded-xl text-xs font-medium flex items-center justify-center gap-2 transition-all cursor-pointer ${
             activeTab === 'email'
-              ? 'bg-[#B5502F] text-white shadow-sm'
-              : 'bg-white text-[#5A554F] border border-[#DDD3C3] hover:bg-[#F0E9DC]'
+              ? qrChannels.email.activeTabClass
+              : 'bg-white text-[#1F1D1B] border border-[#DDD3C3] hover:border-[#EA4335] hover:bg-[#EA4335]/5'
           }`}
         >
-          {renderIcon('email', 'w-4 h-4')}
+          <span className={activeTab === 'email' ? 'text-white' : 'text-[#EA4335]'}>
+            {renderIcon('email', 'w-4 h-4')}
+          </span>
           <span>Email</span>
         </button>
       </div>
 
       {/* QR Display Card */}
-      <div className="bg-white p-6 sm:p-7 rounded-2xl border border-[#DDD3C3] flex flex-col sm:flex-row items-center justify-between gap-6">
+      <div className="bg-white p-6 sm:p-7 rounded-2xl border border-[#DDD3C3] flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xs">
         
-        {/* QR Code Graphic Frame with Brand Icon Overlay */}
-        <div className="relative group shrink-0">
+        {/* Clean, 100% Scannable QR Code Frame */}
+        <div className="shrink-0">
           <a
             href={current.url}
             target="_blank"
             rel="noopener noreferrer"
             title={`Click to open ${current.title}`}
-            className="block p-3 bg-[#FAF7F2] rounded-2xl border border-[#DDD3C3] shadow-inner hover:border-[#B5502F] transition-all cursor-pointer relative"
+            className="block p-3.5 bg-[#FAF7F2] rounded-2xl border border-[#DDD3C3] shadow-inner hover:border-[#1F1D1B]/40 transition-all cursor-pointer group"
           >
             <img
               src={current.qrUrl}
               alt={`${current.title} QR Code`}
-              className="w-44 h-44 object-contain rounded-xl"
-              loading="lazy"
+              className="w-48 h-48 object-contain rounded-xl bg-white p-1"
+              loading="eager"
             />
-            {/* Center icon on QR code */}
-            <div
-              className="absolute inset-0 m-auto w-10 h-10 rounded-xl bg-white shadow-md border border-[#DDD3C3] flex items-center justify-center transition-transform group-hover:scale-110 pointer-events-none"
-              style={{ color: current.color }}
-            >
-              {renderIcon(activeTab, 'w-5 h-5')}
-            </div>
+            <span className="block text-center text-[10px] text-[#5A554F] group-hover:text-[#1F1D1B] font-medium mt-1.5 transition-colors">
+              Click to open directly
+            </span>
           </a>
         </div>
 
         {/* QR Details Beside QR Code */}
-        <div className="space-y-3.5 text-center sm:text-left grow">
+        <div className="space-y-4 text-center sm:text-left grow">
           <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3">
-            {/* Prominent Icon Beside QR Code */}
+            {/* Prominent Authentic Brand Icon Beside QR Code */}
             <div
-              className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-xs border"
+              className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-xs border"
               style={{
                 backgroundColor: `${current.color}15`,
-                borderColor: `${current.color}35`,
+                borderColor: `${current.color}40`,
                 color: current.color
               }}
             >
-              {renderIcon(activeTab, 'w-5 h-5')}
+              {renderIcon(activeTab, 'w-6 h-6')}
             </div>
 
             <div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 justify-center sm:justify-start">
                 <h4 className="font-serif text-2xl font-bold text-[#1F1D1B]">
                   {current.title}
                 </h4>
@@ -192,31 +204,30 @@ export default function QuickConnectQR() {
                   {current.badge}
                 </span>
               </div>
-              <p className="text-xs font-semibold mt-0.5" style={{ color: current.color }}>
+              <p className="text-xs font-bold mt-0.5" style={{ color: current.color }}>
                 {current.handle}
               </p>
             </div>
           </div>
 
-          <p className="text-xs text-[#5A554F] leading-relaxed max-w-md">
+          <p className="text-xs text-[#5A554F] leading-relaxed max-w-md mx-auto sm:mx-0">
             {current.actionText}
           </p>
 
-          {/* Action Links */}
+          {/* Action Button Styled with Official Company Colors */}
           <div className="pt-2 flex flex-wrap items-center justify-center sm:justify-start gap-3">
             <a
               href={current.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-white text-xs sm:text-sm font-semibold shadow-xs hover:opacity-95 transition-all cursor-pointer"
-              style={{ backgroundColor: current.color }}
+              className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all cursor-pointer ${current.buttonClass}`}
             >
               {renderIcon(activeTab, 'w-4 h-4')}
-              <span>Click to Connect on {current.shortName}</span>
+              <span>Click to Open {current.shortName}</span>
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
             <span className="text-xs text-[#5A554F]">
-              (or scan QR using your phone camera)
+              (or scan QR code with your phone camera)
             </span>
           </div>
         </div>

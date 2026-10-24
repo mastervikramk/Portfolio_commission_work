@@ -14,13 +14,13 @@ export const SITE_CONFIG = {
   // WhatsApp availability label
   displayPhoneLabel: "WhatsApp Studio Active",
 
-  // Generates edge-proxied WhatsApp URL so phone numbers are never exposed in client JS or HTML
+  // Edge-proxied WhatsApp URL so the phone number is NEVER exposed in client JS, HTML, or public git repos
   getWhatsAppUrl(message = "") {
     const encoded = message ? `?text=${encodeURIComponent(message)}` : "";
     return `/api/whatsapp${encoded}`;
   },
 
-  // Generates absolute WhatsApp URL (used for external links and QR code scanning)
+  // Generates absolute WhatsApp URL (used for external links and QR code scanning via Cloudflare Edge proxy)
   getAbsoluteWhatsAppUrl(message = "") {
     const base = typeof window !== 'undefined' && window.location.origin && !window.location.origin.includes('localhost')
       ? window.location.origin
@@ -42,4 +42,3 @@ export const SITE_CONFIG = {
   location: "Muzaffarpur, Bihar, India (PIN: 842001)",
   serviceRadius: "Delivering across all 28 Indian States & 8 UTs",
 };
-
