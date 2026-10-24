@@ -18,7 +18,29 @@ export default function Admin({
   certificates = [], 
   setCertificates = () => {} 
 }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    try {
+      const savedToken = localStorage.getItem('arthurvisions_admin_session') || sessionStorage.getItem('arthurvisions_admin_session');
+      if (savedToken) {
+        let expiresAt = 0;
+        try {
+          const parsed = JSON.parse(atob(savedToken));
+          expiresAt = parsed.expiresAt || 0;
+        } catch (e) {
+          const parts = savedToken.split('::');
+          if (parts.length === 3) expiresAt = parseInt(parts[1], 10);
+        }
+        if (expiresAt > Date.now()) {
+          return true;
+        }
+      }
+      const savedPin = localStorage.getItem('arthurvisions_admin_pin') || sessionStorage.getItem('arthurvisions_admin_pin');
+      if (savedPin === '2025' || savedPin === '1234') {
+        return true;
+      }
+    } catch (e) {}
+    return false;
+  });
   const [activeTab, setActiveTab] = useState('add'); // 'add', 'catalog', 'recognition', 'orders'
   const [recSubTab, setRecSubTab] = useState('certificates'); // 'certificates', 'dignitaries', 'timeline'
 
@@ -99,8 +121,14 @@ export default function Admin({
     const savedPin = localStorage.getItem('arthurvisions_admin_pin') || sessionStorage.getItem('arthurvisions_admin_pin');
     
     if (savedToken) {
-      const parts = savedToken.split('.');
-      const expiresAt = parts.length === 3 ? parseInt(parts[1], 10) : 0;
+      let expiresAt = 0;
+      try {
+        const parsed = JSON.parse(atob(savedToken));
+        expiresAt = parsed.expiresAt || 0;
+      } catch (e) {
+        const parts = savedToken.split('::');
+        if (parts.length === 3) expiresAt = parseInt(parts[1], 10);
+      }
       
       // If token is still within its 30-day validity window, unlock immediately (no delay/flicker)
       if (expiresAt > Date.now()) {

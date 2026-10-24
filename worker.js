@@ -183,7 +183,7 @@ export default {
         const duration = rememberMe ? 30 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000;
         const expiresAt = Date.now() + duration;
         const sessionSig = await hmacSha256(`session:${inputEmail}:${expiresAt}`, secret);
-        const sessionToken = `${inputEmail}.${expiresAt}.${sessionSig}`;
+        const sessionToken = btoa(JSON.stringify({ email: inputEmail, expiresAt, sig: sessionSig }));
 
         return new Response(JSON.stringify({
           success: true,
@@ -216,8 +216,30 @@ export default {
           });
         }
 
-        const [email, expiresAtStr, sig] = sessionToken.split(".");
-        const expiresAt = parseInt(expiresAtStr, 10);
+        let email = "";
+        let expiresAt = 0;
+        let sig = "";
+
+        try {
+          const parsed = JSON.parse(atob(sessionToken));
+          email = parsed.email || "";
+          expiresAt = parsed.expiresAt || 0;
+          sig = parsed.sig || "";
+        } catch (e) {
+          // Fallback legacy delimiter
+          const parts = sessionToken.split("::");
+          if (parts.length === 3) {
+            email = parts[0];
+            expiresAt = parseInt(parts[1], 10);
+            sig = parts[2];
+          }
+        }
+
+        if (!email || !expiresAt || !sig) {
+          return new Response(JSON.stringify({ valid: false }), {
+            headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
+          });
+        }
 
         if (Date.now() > expiresAt) {
           return new Response(JSON.stringify({ valid: false, message: "Session expired." }), {
@@ -225,7 +247,7 @@ export default {
           });
         }
 
-        const expectedSig = await hmacSha256(`session:${email}:${expiresAtStr}`, secret);
+        const expectedSig = await hmacSha256(`session:${email}:${expiresAt}`, secret);
         if (expectedSig === sig) {
           return new Response(JSON.stringify({ valid: true, email: email }), {
             headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
