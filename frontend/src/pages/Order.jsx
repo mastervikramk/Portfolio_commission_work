@@ -38,6 +38,14 @@ export default function Order({ initialConfig, onOrderSuccess }) {
     }
   }, [initialConfig]);
 
+  const getTodayDateString = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -48,6 +56,13 @@ export default function Order({ initialConfig, onOrderSuccess }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Prevent past date selection
+    if (formData.deadline && formData.deadline < getTodayDateString()) {
+      alert("Target delivery date cannot be in the past. Please select today or a future date.");
+      return;
+    }
+
     setSubmitting(true);
 
     // Prepare payload
@@ -439,10 +454,19 @@ export default function Order({ initialConfig, onOrderSuccess }) {
                   </label>
                   <input
                     type="date"
+                    min={getTodayDateString()}
                     value={formData.deadline}
-                    onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
+                    onChange={(e) => {
+                      const selected = e.target.value;
+                      if (selected && selected < getTodayDateString()) {
+                        alert("Target delivery date cannot be earlier than today.");
+                        return;
+                      }
+                      setFormData({ ...formData, deadline: selected });
+                    }}
                     className="w-full px-3.5 py-2.5 rounded-xl border border-[#DDD3C3] text-sm text-[#1F1D1B] focus:outline-none focus:ring-2 focus:ring-[#B5502F]"
                   />
+                  <p className="text-[11px] text-[#5A554F] mt-1">Select today or a future target delivery date.</p>
                 </div>
               </div>
 
