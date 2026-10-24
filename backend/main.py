@@ -30,7 +30,7 @@ async def whatsapp_redirect(request: Request, text: str = ""):
     env = getattr(request, "scope", {}).get("env")
     target = getattr(env, "WHATSAPP_TARGET", None) if env else None
     if not target:
-        target = "918207442286"
+        target = "918603406848"
 
     # Support WhatsApp Business Short Links (wa.me/message/XYZ) or full URLs
     target_str = str(target).strip()

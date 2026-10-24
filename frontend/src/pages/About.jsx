@@ -48,7 +48,7 @@ export default function About({ setActivePage }) {
               Over the years, this obsession with realism evolved across diverse mediums—from classical <strong>oil on linen canvas</strong> and luminous <strong>watercolors</strong> to bold <strong>pen portraits</strong> and <strong>live event sketching</strong>.
             </p>
             <p>
-              A pivotal chapter in my artistic education came through intensive guidance under <strong>Dr. Ujjawal Ankur</strong>, Professor in the Leather Department at <strong>NIFT Delhi (Ministry of Textiles)</strong>. This expanded my understanding of surface textures, archival materiality, and structural craft.
+              A pivotal chapter in my artistic education came through intensive guidance under <strong>Dr. Ujjwal Ankur</strong>, Professor in the Leather Department at <strong>NIFT Delhi (Ministry of Textiles)</strong>. This expanded my understanding of surface textures, archival materiality, and structural craft.
             </p>
           </div>
 

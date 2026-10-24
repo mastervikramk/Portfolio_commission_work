@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send, MessageCircle, Clock, CheckCircle } from 'lucide-react';
-import { YoutubeIcon, InstagramIcon } from '../components/SocialIcons';
+import { Mail, Send, MessageCircle, CheckCircle } from 'lucide-react';
 import QuickConnectQR from '../components/QuickConnectQR';
 import { SITE_CONFIG } from '../config/site';
 
@@ -13,14 +12,48 @@ export default function Contact() {
     message: '',
   });
   const [sent, setSent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSent(true);
+    setSubmitting(true);
+
+    // Save to local storage for Admin dashboard
+    const newMsg = {
+      id: `MSG-${Date.now().toString().slice(-5)}`,
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      subject: formData.subject,
+      message: formData.message,
+      date: new Date().toLocaleDateString('en-IN'),
+    };
+    const savedMsgs = JSON.parse(localStorage.getItem('arthurvisions_contacts') || '[]');
+    localStorage.setItem('arthurvisions_contacts', JSON.stringify([newMsg, ...savedMsgs]));
+
+    // Send to Edge API
+    try {
+      const data = new FormData();
+      data.append('name', formData.name);
+      data.append('email', formData.email);
+      data.append('phone', formData.phone);
+      data.append('subject', formData.subject);
+      data.append('message', formData.message);
+
+      await fetch('/api/contact', {
+        method: 'POST',
+        body: data,
+      });
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setSubmitting(false);
+      setSent(true);
+    }
   };
 
   return (
-    <div className="pt-28 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+    <div className="pt-28 pb-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
       
       {/* Header */}
       <div className="text-center max-w-2xl mx-auto space-y-3">
@@ -28,122 +61,58 @@ export default function Contact() {
           Get in Touch
         </span>
         <h1 className="font-serif text-4xl sm:text-5xl font-bold text-[#1F1D1B]">
-          Contact the Studio
+          Contact Arthur Visions
         </h1>
         <p className="text-sm sm:text-base text-[#5A554F]">
-          Have questions about a custom portrait, gallery purchases, or booking a live event sketching session? We are here to help.
+          Have questions about a custom portrait, gallery purchases, or booking a live event sketching session? Connect directly or send a message below.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-        
-        {/* Left Column: Direct Contact Info */}
-        <div className="lg:col-span-5 space-y-6">
-          
-          <div className="bg-white p-8 rounded-3xl border border-[#DDD3C3] shadow-xs space-y-6">
-            <h3 className="font-serif text-2xl font-bold text-[#1F1D1B]">
-              Studio Information
-            </h3>
+      {/* 1. Quick Connect Channels (WhatsApp, Instagram, YouTube, Email) */}
+      <QuickConnectQR />
 
-            <div className="space-y-4 text-sm text-[#5A554F]">
-              <div className="flex items-start gap-3">
-                <div className="p-2.5 rounded-xl bg-[#F8ECE7] text-[#B5502F] shrink-0 mt-0.5">
-                  <MapPin className="w-5 h-5" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-[#1F1D1B]">Studio Location</h4>
-                  <p>Muzaffarpur, Bihar, India (PIN: 842001)</p>
-                  <p className="text-xs text-[#6B7F5E] font-medium mt-0.5">
-                    Express Insured Delivery Across All Indian States & UTs
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3">
-                <div className="p-2.5 rounded-xl bg-[#EFF4ED] text-[#6B7F5E] shrink-0 mt-0.5">
-                  <MessageCircle className="w-5 h-5 fill-current" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-[#1F1D1B]">WhatsApp Studio Support</h4>
-                  <p className="text-xs text-[#5A554F]">Instant consultation for reference photos & quotes</p>
-                  <a
-                    href={SITE_CONFIG.getWhatsAppUrl("Hi Vinita, I have an inquiry regarding your art.")}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#25D366] text-white text-xs font-semibold mt-2 shadow-2xs hover:bg-[#20ba59]"
-                  >
-                    <MessageCircle className="w-3.5 h-3.5 fill-current" />
-                    <span>Open WhatsApp Chat</span>
-                  </a>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3">
-                <div className="p-2.5 rounded-xl bg-[#F0E9DC] text-[#1F1D1B] shrink-0 mt-0.5">
-                  <Mail className="w-5 h-5 text-[#B5502F]" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-[#1F1D1B]">Official Studio Email</h4>
-                  <a href={`mailto:${SITE_CONFIG.publicEmail}`} className="hover:text-[#B5502F] font-semibold text-xs sm:text-sm block">
-                    {SITE_CONFIG.publicEmail}
-                  </a>
-                  <p className="text-[11px] text-[#5A554F] mt-0.5">
-                    Direct studio desk (Inquiries answered within 24 hours)
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3">
-                <div className="p-2.5 rounded-xl bg-[#FBF5E6] text-[#C99A2E] shrink-0 mt-0.5">
-                  <Clock className="w-5 h-5" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-[#1F1D1B]">Studio Hours</h4>
-                  <p className="text-xs">Monday – Saturday: 10:00 AM – 7:30 PM IST</p>
-                  <p className="text-xs text-[#5A554F]">Online inquiries received 24/7</p>
-                </div>
-              </div>
+      {/* 2. Contact Message Form */}
+      <div className="bg-white p-8 sm:p-10 rounded-3xl border border-[#DDD3C3] shadow-xs">
+        {sent ? (
+          <div className="text-center py-10 space-y-5">
+            <div className="w-14 h-14 rounded-full bg-[#EFF4ED] text-[#6B7F5E] flex items-center justify-center mx-auto shadow-xs">
+              <CheckCircle className="w-7 h-7" />
             </div>
-
-            {/* Social channels */}
-            <div className="pt-4 border-t border-[#DDD3C3]/60 flex items-center gap-3">
-              <a
-                href={SITE_CONFIG.youtubeUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#FAF7F2] border border-[#DDD3C3] text-xs font-semibold text-[#1F1D1B] hover:text-[#B5502F] hover:border-[#B5502F] transition-colors"
-              >
-                <YoutubeIcon className="w-4 h-4 text-red-600" />
-                <span>YouTube</span>
-              </a>
-              <a
-                href={SITE_CONFIG.instagramUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#FAF7F2] border border-[#DDD3C3] text-xs font-semibold text-[#1F1D1B] hover:text-[#B5502F] hover:border-[#B5502F] transition-colors"
-              >
-                <InstagramIcon className="w-4 h-4 text-[#B5502F]" />
-                <span>Instagram</span>
-              </a>
-            </div>
-
-          </div>
-
-        </div>
-
-        {/* Right Column: Contact Message Form */}
-        <div className="lg:col-span-7 bg-white p-8 sm:p-10 rounded-3xl border border-[#DDD3C3] shadow-xs">
-          {sent ? (
-            <div className="text-center py-12 space-y-4">
-              <div className="w-12 h-12 rounded-full bg-[#EFF4ED] text-[#6B7F5E] flex items-center justify-center mx-auto">
-                <CheckCircle className="w-6 h-6" />
-              </div>
+            <div className="space-y-1">
               <h3 className="font-serif text-2xl font-bold text-[#1F1D1B]">
                 Message Sent Successfully!
               </h3>
-              <p className="text-sm text-[#5A554F] max-w-sm mx-auto">
-                Thank you for reaching out. We will get back to you shortly via email or WhatsApp.
+              <p className="text-sm text-[#5A554F] max-w-md mx-auto">
+                Thank you, <strong>{formData.name}</strong>. Vinita has received your note and will get back to you shortly via WhatsApp or email.
               </p>
+            </div>
+
+            {/* Instant WhatsApp & Email connection buttons */}
+            <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto">
+              <a
+                href={SITE_CONFIG.getWhatsAppUrl(
+                  `Hi Vinita, I just submitted an inquiry on your website.\nName: ${formData.name}\nEmail: ${formData.email}${formData.phone ? `\nPhone: ${formData.phone}` : ''}\nSubject: ${formData.subject}\nMessage: ${formData.message}`
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-[#25D366] text-white hover:bg-[#20ba59] font-medium text-xs flex items-center justify-center gap-2 shadow-xs cursor-pointer"
+              >
+                <MessageCircle className="w-4 h-4 fill-current" />
+                <span>Connect Instantly on WhatsApp</span>
+              </a>
+
+              <a
+                href={`mailto:${SITE_CONFIG.publicEmail}?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(
+                  `Name: ${formData.name}\nEmail: ${formData.email}\n${formData.phone ? `Phone: ${formData.phone}\n` : ''}\nMessage:\n${formData.message}`
+                )}`}
+                className="w-full sm:w-auto px-5 py-2.5 rounded-full bg-white border border-[#DDD3C3] text-xs font-semibold text-[#1F1D1B] hover:bg-[#FAF7F2] flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer"
+              >
+                <Mail className="w-3.5 h-3.5 text-[#B5502F]" />
+                <span>Open in Email App</span>
+              </a>
+            </div>
+
+            <div className="pt-4 border-t border-[#DDD3C3]/60">
               <button
                 onClick={() => setSent(false)}
                 className="px-6 py-2 rounded-full bg-[#FAF7F2] border border-[#DDD3C3] text-xs font-semibold hover:bg-[#F0E9DC] cursor-pointer"
@@ -151,45 +120,31 @@ export default function Contact() {
                 Send Another Message
               </button>
             </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="border-b border-[#DDD3C3]/60 pb-3">
-                <h3 className="font-serif text-2xl font-bold text-[#1F1D1B]">
-                  Send a Direct Note
-                </h3>
-                <p className="text-xs text-[#5A554F]">
-                  Fill out the form and we will respond within a few hours.
-                </p>
-              </div>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="border-b border-[#DDD3C3]/60 pb-3">
+              <h3 className="font-serif text-2xl font-bold text-[#1F1D1B]">
+                Send a Direct Message
+              </h3>
+              <p className="text-xs text-[#5A554F] mt-0.5">
+                Fill out the form below and Vinita will respond directly to your WhatsApp or email.
+              </p>
+            </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#5A554F] mb-1.5">
-                    Your Name *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="Full Name"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#DDD3C3] text-sm text-[#1F1D1B] focus:outline-none focus:ring-2 focus:ring-[#B5502F]"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#5A554F] mb-1.5">
-                    Phone / WhatsApp *
-                  </label>
-                  <input
-                    type="tel"
-                    required
-                    placeholder="Contact Number"
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#DDD3C3] text-sm text-[#1F1D1B] focus:outline-none focus:ring-2 focus:ring-[#B5502F]"
-                  />
-                </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-[#5A554F] mb-1.5">
+                  Your Name *
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="Full Name"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#DDD3C3] text-sm text-[#1F1D1B] focus:outline-none focus:ring-2 focus:ring-[#B5502F]"
+                />
               </div>
 
               <div>
@@ -199,16 +154,31 @@ export default function Contact() {
                 <input
                   type="email"
                   required
-                  placeholder="yourname@gmail.com"
+                  placeholder="you@example.com"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#DDD3C3] text-sm text-[#1F1D1B] focus:outline-none focus:ring-2 focus:ring-[#B5502F]"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-[#5A554F] mb-1.5">
+                  WhatsApp / Phone (Optional)
+                </label>
+                <input
+                  type="tel"
+                  placeholder="+91 98765 43210 (Optional)"
+                  value={formData.phone}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-[#DDD3C3] text-sm text-[#1F1D1B] focus:outline-none focus:ring-2 focus:ring-[#B5502F]"
                 />
               </div>
 
               <div>
                 <label className="block text-xs font-semibold uppercase tracking-wider text-[#5A554F] mb-1.5">
-                  Subject
+                  Inquiry Topic
                 </label>
                 <select
                   value={formData.subject}
@@ -221,38 +191,34 @@ export default function Contact() {
                   <option value="Exhibition / Media Collaboration">Exhibition / Media Collaboration</option>
                 </select>
               </div>
+            </div>
 
-              <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-[#5A554F] mb-1.5">
-                  Message *
-                </label>
-                <textarea
-                  required
-                  rows="4"
-                  placeholder="Describe your event or questions here..."
-                  value={formData.message}
-                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#DDD3C3] text-sm text-[#1F1D1B] focus:outline-none focus:ring-2 focus:ring-[#B5502F]"
-                />
-              </div>
+            <div>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-[#5A554F] mb-1.5">
+                Message *
+              </label>
+              <textarea
+                required
+                rows="4"
+                placeholder="Describe your event, portrait idea, or questions here..."
+                value={formData.message}
+                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                className="w-full px-3.5 py-2.5 rounded-xl border border-[#DDD3C3] text-sm text-[#1F1D1B] focus:outline-none focus:ring-2 focus:ring-[#B5502F]"
+              />
+            </div>
 
-              <button
-                type="submit"
-                className="w-full py-3.5 rounded-full bg-[#B5502F] hover:bg-[#9B4224] text-white font-semibold text-sm transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <Send className="w-4 h-4" />
-                <span>Submit Message</span>
-              </button>
-            </form>
-          )}
-        </div>
-
+            <button
+              type="submit"
+              disabled={submitting}
+              className="w-full py-3.5 rounded-full bg-[#B5502F] hover:bg-[#9B4224] text-white font-semibold text-sm transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+            >
+              <Send className="w-4 h-4" />
+              <span>{submitting ? 'Sending...' : 'Submit Message'}</span>
+            </button>
+          </form>
+        )}
       </div>
-
-      {/* Instant Mobile QR Scan Section (for Laptop / Desktop users) */}
-      <QuickConnectQR />
 
     </div>
   );
 }
-

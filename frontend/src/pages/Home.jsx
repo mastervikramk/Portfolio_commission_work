@@ -29,11 +29,11 @@ export default function Home({ artworks, setActivePage, onOpenLightbox, setSelec
             <div className="lg:col-span-7 space-y-6 text-left">
               
               {/* Prestige Tag */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FBF5E6] border border-[#C99A2E]/40 text-[#1F1D1B] text-xs font-medium shadow-xs">
-                <span className="w-2 h-2 rounded-full bg-[#C99A2E] animate-pulse" />
-                <span className="font-semibold text-[#B5502F]">Arthur Visions</span>
+              <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-[#FBF5E6] border border-[#C99A2E]/40 text-[#1F1D1B] text-[11px] sm:text-xs font-medium shadow-xs max-w-full">
+                <span className="w-2 h-2 rounded-full bg-[#C99A2E] animate-pulse shrink-0" />
+                <span className="font-semibold text-[#B5502F] whitespace-nowrap">Arthur Visions</span>
                 <span className="text-[#DDD3C3]">|</span>
-                <span>Recognized by Padma Shri Dulari Devi</span>
+                <span className="truncate sm:whitespace-normal">Recognized by Padma Shri Dulari Devi</span>
               </div>
 
               {/* Main Headline */}
@@ -46,7 +46,7 @@ export default function Home({ artworks, setActivePage, onOpenLightbox, setSelec
 
               {/* Subtitle */}
               <p className="text-base sm:text-lg text-[#5A554F] leading-relaxed max-w-2xl font-light">
-                Preserving emotion in every stroke. Master of realistic charcoal, oil, watercolor, and traditional <strong>Vajjika folk art</strong>. Mentored under NIFT Delhi faculty & 1st Rank winner at Bihar State Youth Festivals.
+                Preserving emotion in every stroke. Master of realistic charcoal, oil, watercolor, and traditional <strong>Vajjika folk art</strong>. Mentored under NIFT Delhi faculty & 1st Rank winner at District Level Youth Festivals.
               </p>
 
               {/* CTA Buttons */}
@@ -170,7 +170,7 @@ export default function Home({ artworks, setActivePage, onOpenLightbox, setSelec
             </span>
             <span className="flex items-center gap-1.5 bg-[#FAF7F2] px-3.5 py-1.5 rounded-full border border-[#DDD3C3] shadow-2xs">
               <span className="text-[#C99A2E] font-bold">★</span>
-              <span>Bihar Youth Festival 1st Rank</span>
+              <span>District Level Youth Festival 1st Rank</span>
             </span>
             <span className="flex items-center gap-1.5 bg-[#FAF7F2] px-3.5 py-1.5 rounded-full border border-[#DDD3C3] shadow-2xs">
               <span className="text-[#C99A2E] font-bold">★</span>

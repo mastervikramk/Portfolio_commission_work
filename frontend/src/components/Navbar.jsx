@@ -37,24 +37,24 @@ export default function Navbar({ activePage, setActivePage }) {
           : 'bg-[#FAF7F2]/80 backdrop-blur-xs border-b border-[#DDD3C3]/50'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between min-h-[4rem] sm:min-h-[5rem] py-2 gap-2">
           
           {/* Logo / Brand Name */}
           <button
             onClick={() => handleNavClick('home')}
-            className="flex items-center gap-3 group text-left cursor-pointer"
+            className="flex items-center gap-2 sm:gap-3 group text-left cursor-pointer min-w-0 shrink"
           >
             <img
               src={logoImage}
               alt="Arthur Visions Logo"
-              className="w-10 h-10 rounded-full object-cover border border-[#DDD3C3] shadow-xs group-hover:border-[#B5502F] transition-colors"
+              className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover border border-[#DDD3C3] shadow-xs group-hover:border-[#B5502F] transition-colors shrink-0"
             />
-            <div>
-              <span className="block font-serif text-2xl font-bold tracking-wide text-[#1F1D1B] group-hover:text-[#B5502F] transition-colors">
+            <div className="min-w-0 flex flex-col justify-center">
+              <span className="block font-serif text-[17px] sm:text-2xl font-bold tracking-wide text-[#1F1D1B] group-hover:text-[#B5502F] transition-colors leading-tight whitespace-nowrap">
                 Arthur Visions
               </span>
-              <span className="block text-[10px] uppercase tracking-widest text-[#5A554F] font-medium">
+              <span className="block text-[8.5px] sm:text-[10px] uppercase tracking-wider text-[#5A554F] font-medium leading-tight mt-0.5 whitespace-nowrap">
                 Fine Art & Portraits • India
               </span>
             </div>
@@ -93,20 +93,20 @@ export default function Navbar({ activePage, setActivePage }) {
             })}
           </nav>
 
-          {/* Mobile Menu Button */}
-          <div className="flex md:hidden items-center gap-2">
+          {/* Mobile Actions */}
+          <div className="flex md:hidden items-center gap-1.5 sm:gap-2 shrink-0">
             <button
               onClick={() => handleNavClick('order')}
-              className="px-3.5 py-1.5 rounded-full text-xs font-medium bg-[#B5502F] text-white shadow-xs cursor-pointer"
+              className="px-3 py-1.5 rounded-full text-xs font-semibold bg-[#B5502F] text-white shadow-xs cursor-pointer whitespace-nowrap"
             >
               Order Now
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-lg text-[#1F1D1B] hover:bg-[#F0E9DC] transition-colors cursor-pointer"
+              className="p-1.5 rounded-lg text-[#1F1D1B] hover:bg-[#F0E9DC] transition-colors cursor-pointer"
               aria-label="Toggle menu"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? <X className="w-5 h-5 sm:w-6 sm:h-6" /> : <Menu className="w-5 h-5 sm:w-6 sm:h-6" />}
             </button>
           </div>
         </div>

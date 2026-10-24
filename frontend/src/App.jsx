@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import WhatsAppButton from './components/WhatsAppButton';
 import LightboxModal from './components/LightboxModal';
 
 // Pages
@@ -119,9 +118,6 @@ export default function App() {
 
       {/* Global Footer */}
       <Footer setActivePage={handlePageChange} />
-
-      {/* Fixed Floating WhatsApp Consultation Button */}
-      <WhatsAppButton />
 
       {/* Lightbox Zoom Modal */}
       <LightboxModal

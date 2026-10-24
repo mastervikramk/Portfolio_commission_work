@@ -24,7 +24,7 @@ export const DIGNITARIES = [
     image: dulariDeviImg
   },
   {
-    name: "Dr. Ujjawal Ankur",
+    name: "Dr. Ujjwal Ankur",
     role: "Professor (Leather Dept.), NIFT Delhi",
     event: "Academic Mentorship & Guidance under Ministry of Textiles",
     description: "Mentored in technical design aesthetics, materiality, and advanced craft preservation methodologies.",
@@ -122,7 +122,7 @@ export const CERTIFICATES = [
   {
     id: "cert-1",
     title: "NIFT Delhi — Ministry of Textiles",
-    sub: "Workshop on Materiality & Design Exploration under Dr. Ujjawal Ankur",
+    sub: "Workshop on Materiality & Design Exploration under Dr. Ujjwal Ankur",
     year: "2024",
     issuer: "National Institute of Fashion Technology, New Delhi",
     image: niftCert
