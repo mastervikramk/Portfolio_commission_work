@@ -8,10 +8,9 @@
 ## 🎨 Architecture & ₹0/month Tech Stack
 
 * **Frontend:** React 19 (Vite) + Tailwind CSS + Lucide Icons + Cormorant Garamond & Inter Typography
-* **Backend API:** Python FastAPI running serverless on **Cloudflare Python Workers**
-* **Object Storage:** **Cloudflare R2** (10 GB free forever, ₹0 egress fee) for customer photos & artworks
-* **Database:** **Cloudflare D1** (Serverless SQLite edge DB, 5 GB free)
-* **Hosting:** **Cloudflare Pages** (unlimited bandwidth & fast edge caching across India)
+* **Edge Backend:** **Cloudflare Worker** (`worker.js`) running natively on Cloudflare Edge with Static Assets
+* **Email & Notifications:** **Cloudflare Email Routing** (`send_email` binding) for instant commission alerts & Passwordless OTP
+* **Hosting:** Cloudflare Workers with Static Assets (unlimited bandwidth & fast edge caching across India)
 * **Total Running Cost:** **₹0/month** (Only ~₹500–₹600/year for `arthurvisions.in` domain)
 
 ---
@@ -19,9 +18,9 @@
 ## 📁 Directory Structure
 
 ```
-Vinita/
+Portfolio_commission_work/
 ├── frontend/                     # React + Tailwind CSS client
-│   ├── public/                   # Favicon & assets
+│   ├── public/                   # Favicon, robots.txt, sitemap.xml
 │   ├── src/
 │   │   ├── components/           # Navbar, Footer, WhatsAppButton, LightboxModal, Estimator
 │   │   ├── pages/
@@ -30,19 +29,16 @@ Vinita/
 │   │   │   ├── Order.jsx         # 4-step commission form, pricing matrix, packaging FAQ
 │   │   │   ├── Recognition.jsx   # Padma Shri Dulari Devi, NIFT, dignitaries, certificates
 │   │   │   ├── About.jsx         # Artist story, NIFT mentorship, Vajjika art revival
-│   │   │   ├── Contact.jsx       # Studio info, WhatsApp, direct note form
-│   │   │   └── Admin.jsx         # 1-screen mobile artist portal (PIN protected)
+│   │   │   ├── Contact.jsx       # Studio info, WhatsApp, direct inquiry selector
+│   │   │   └── Admin.jsx         # Studio Artist Portal (Passwordless Email OTP & Full Edit)
 │   │   ├── data/                 # artworks.js, awards.js, faqs.js
 │   │   ├── App.jsx
 │   │   └── index.css             # Tailwind v4 theme palette tokens
 │   ├── package.json
 │   └── vite.config.js
 │
-└── backend/                      # Python FastAPI Cloudflare Worker
-    ├── main.py                   # FastAPI app with Cloudflare ASGI entrypoint
-    ├── schema.sql                # Cloudflare D1 SQLite database schema
-    ├── wrangler.toml             # Cloudflare D1 & R2 bucket bindings
-    └── pyproject.toml            # Python worker configuration
+├── worker.js                     # Unified Cloudflare Worker (APIs, Email dispatch, Asset serving)
+└── wrangler.jsonc                # Cloudflare Worker configuration & bindings
 ```
 
 ---

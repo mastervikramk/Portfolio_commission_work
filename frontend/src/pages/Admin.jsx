@@ -574,7 +574,7 @@ export default function Admin({
                     autoFocus
                     value={emailInput}
                     onChange={(e) => setEmailInput(e.target.value)}
-                    placeholder="e.g. shinkodha@gmail.com"
+                    placeholder="e.g. yourname@gmail.com"
                     className="w-full py-3 px-4 rounded-xl border border-[#DDD3C3] focus:outline-none focus:ring-2 focus:ring-[#B5502F] bg-[#FAF7F2] text-sm text-[#1F1D1B]"
                   />
                 </div>

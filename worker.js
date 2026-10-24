@@ -29,7 +29,7 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const secret = env.AUTH_SECRET || "arthurvisions-auth-secret-key-2025";
-    const adminEmail = (env.ADMIN_EMAIL || "shinkodha@gmail.com").trim().toLowerCase();
+    const adminEmail = (env.ADMIN_EMAIL || "").trim().toLowerCase();
 
     // CORS preflight response
     if (request.method === "OPTIONS") {
@@ -245,7 +245,10 @@ export default {
     // 1. WhatsApp Edge Redirect (Anonymizes artist's private phone number)
     if (url.pathname === "/api/whatsapp") {
       const text = url.searchParams.get("text") || "";
-      const target = env.WHATSAPP_TARGET || "918603406848";
+      const target = env.WHATSAPP_TARGET || "";
+      if (!target) {
+        return new Response("WhatsApp service temporarily unavailable.", { status: 503 });
+      }
       const userAgent = request.headers.get("user-agent") || "";
       const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
 
@@ -275,21 +278,104 @@ export default {
       const orderId = `ORD-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
       try {
         const formData = await request.formData();
-        if (env.DB) {
-          const name = formData.get("name") || "";
-          const phone = formData.get("phone") || "";
-          const city = formData.get("city") || "";
-          const medium = formData.get("medium") || "";
-          const size = formData.get("size") || "";
-          const subjects = parseInt(formData.get("subjects") || "1", 10);
-          const occasion = formData.get("occasion") || "Gift";
-          const deadline = formData.get("deadline") || "";
-          const notes = formData.get("notes") || "";
+        const name = formData.get("name") || "";
+        const phone = formData.get("phone") || "";
+        const email = formData.get("email") || "";
+        const city = formData.get("city") || "";
+        const medium = formData.get("medium") || "";
+        const size = formData.get("size") || "";
+        const subjects = parseInt(formData.get("subjects") || "1", 10);
+        const occasion = formData.get("occasion") || "Gift";
+        const deadline = formData.get("deadline") || "";
+        const notes = formData.get("notes") || "";
 
+        if (env.DB) {
           await env.DB.prepare(
             `INSERT INTO orders (id, name, phone, city, medium, size, subjects, occasion, deadline, notes, status)
              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'NEW')`
           ).bind(orderId, name, phone, city, medium, size, subjects, occasion, deadline, notes).run();
+        }
+
+        // Dispatch instant Email notification to artist
+        if (env.EMAIL && typeof env.EMAIL.send === "function") {
+          try {
+            const recipient = (env.ADMIN_EMAIL || "").trim().toLowerCase();
+            if (!recipient) {
+              console.warn("ADMIN_EMAIL secret is not configured.");
+              return;
+            }
+            const cleanPhone = phone.replace(/[^0-9]/g, "");
+            const waLink = `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(
+              `Hi ${name}, this is Vinita from Arthur Visions. Thank you for your inquiry for a ${medium} (${size}) portrait. Let's discuss your reference photo!`
+            )}`;
+
+            const mime = [
+              `From: "Arthur Visions Studio" <contact@arthurvisions.in>`,
+              `To: ${recipient}`,
+              `Subject: New Commission Order: ${name} (${medium} - ${size}) [${orderId}]`,
+              `MIME-Version: 1.0`,
+              `Content-Type: text/html; charset=UTF-8`,
+              ``,
+              `<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body style="font-family: Georgia, serif; background-color: #FAF7F2; padding: 36px 16px; color: #1F1D1B; margin: 0;">
+  <div style="max-width: 540px; margin: 0 auto; background: #ffffff; border: 1px solid #DDD3C3; border-radius: 24px; padding: 32px 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.05);">
+    <div style="border-bottom: 2px solid #FAF7F2; padding-bottom: 16px; margin-bottom: 20px; text-align: center;">
+      <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #B5502F; font-weight: bold;">Arthur Visions Fine Art Studio</span>
+      <h2 style="font-size: 24px; margin: 8px 0 4px; color: #1F1D1B;">New Commission Inquiry!</h2>
+      <p style="font-size: 13px; color: #5A554F; margin: 0;">Order Reference: <strong>${orderId}</strong></p>
+    </div>
+
+    <table style="width: 100%; border-collapse: collapse; font-size: 14px; margin-bottom: 24px;">
+      <tr>
+        <td style="padding: 8px 0; color: #5A554F; width: 140px;"><strong>Client Name:</strong></td>
+        <td style="padding: 8px 0; color: #1F1D1B; font-weight: bold;">${name}</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px 0; color: #5A554F;"><strong>WhatsApp Phone:</strong></td>
+        <td style="padding: 8px 0; color: #1F1D1B;"><a href="${waLink}" style="color: #25D366; font-weight: bold; text-decoration: none;">+91 ${phone} (Tap to WhatsApp)</a></td>
+      </tr>
+      ${email ? `<tr><td style="padding: 8px 0; color: #5A554F;"><strong>Client Email:</strong></td><td style="padding: 8px 0; color: #1F1D1B;">${email}</td></tr>` : ''}
+      <tr>
+        <td style="padding: 8px 0; color: #5A554F;"><strong>Delivery City:</strong></td>
+        <td style="padding: 8px 0; color: #1F1D1B;">${city}</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px 0; color: #5A554F;"><strong>Artwork Medium:</strong></td>
+        <td style="padding: 8px 0; color: #B5502F; font-weight: bold;">${medium}</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px 0; color: #5A554F;"><strong>Canvas / Size:</strong></td>
+        <td style="padding: 8px 0; color: #1F1D1B;">${size} (${subjects} face / subject)</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px 0; color: #5A554F;"><strong>Occasion:</strong></td>
+        <td style="padding: 8px 0; color: #1F1D1B;">${occasion}</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px 0; color: #5A554F;"><strong>Target Date:</strong></td>
+        <td style="padding: 8px 0; color: #1F1D1B;">${deadline || "Flexible"}</td>
+      </tr>
+      ${notes ? `<tr><td style="padding: 8px 0; color: #5A554F; vertical-align: top;"><strong>Notes / Request:</strong></td><td style="padding: 8px 0; color: #1F1D1B; background: #FAF7F2; padding: 8px; border-radius: 8px; font-style: italic;">"${notes}"</td></tr>` : ''}
+    </table>
+
+    <div style="text-align: center; margin-top: 24px; padding-top: 20px; border-top: 1px solid #DDD3C3;">
+      <a href="${waLink}" style="display: inline-block; background: #25D366; color: #ffffff; text-decoration: none; padding: 14px 28px; border-radius: 50px; font-size: 14px; font-weight: bold; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(37,211,102,0.3);">
+        Reply to ${name} on WhatsApp
+      </a>
+      <p style="font-size: 11px; color: #9B948A; margin: 8px 0 0;">Arthur Visions Artist Notification System</p>
+    </div>
+  </div>
+</body>
+</html>`
+            ].join("\r\n");
+
+            const emailMsg = new EmailMessage("contact@arthurvisions.in", recipient, mime);
+            await env.EMAIL.send(emailMsg);
+          } catch (mailErr) {
+            console.error("Order notification email dispatch error:", mailErr);
+          }
         }
       } catch (err) {
         console.error("Order DB insert error:", err);
