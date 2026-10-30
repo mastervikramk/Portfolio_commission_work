@@ -534,6 +534,169 @@ export default {
       });
     }
 
+    // ─────────────────────────────────────────────────────────────
+    // 5. Public Content Endpoint (Artworks & Recognitions Global Sync)
+    // ─────────────────────────────────────────────────────────────
+    if (url.pathname === "/api/content" && request.method === "GET") {
+      if (env.ORDERS_KV) {
+        try {
+          const [rawArtworks, rawDignitaries, rawTimeline, rawCertificates] = await Promise.all([
+            env.ORDERS_KV.get("custom_artworks"),
+            env.ORDERS_KV.get("custom_dignitaries"),
+            env.ORDERS_KV.get("custom_timeline"),
+            env.ORDERS_KV.get("custom_certificates"),
+          ]);
+          return new Response(JSON.stringify({
+            artworks: rawArtworks ? JSON.parse(rawArtworks) : null,
+            dignitaries: rawDignitaries ? JSON.parse(rawDignitaries) : null,
+            timeline: rawTimeline ? JSON.parse(rawTimeline) : null,
+            certificates: rawCertificates ? JSON.parse(rawCertificates) : null,
+          }), {
+            headers: {
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
+              "Cache-Control": "no-cache, no-store, must-revalidate",
+            },
+          });
+        } catch (e) {
+          console.error("KV read content error:", e);
+        }
+      }
+      return new Response(JSON.stringify({
+        artworks: null,
+        dignitaries: null,
+        timeline: null,
+        certificates: null,
+      }), {
+        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
+      });
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // 6. Admin Content Update (Single Collection)
+    // ─────────────────────────────────────────────────────────────
+    if (url.pathname === "/api/admin/content/update" && request.method === "POST") {
+      try {
+        const body = await request.json().catch(() => ({}));
+        const authHeader = request.headers.get("Authorization") || "";
+        const token = body.sessionToken || (authHeader.startsWith("Bearer ") ? authHeader.substring(7) : "");
+        const pin = body.pin || "";
+
+        let authorized = false;
+        if (pin === "2025") {
+          authorized = true;
+        } else if (token) {
+          try {
+            const parsed = JSON.parse(atob(token));
+            if (parsed.email && parsed.expiresAt && parsed.sig && Date.now() <= parsed.expiresAt) {
+              const expectedSig = await hmacSha256(`session:${parsed.email}:${parsed.expiresAt}`, secret);
+              if (expectedSig === parsed.sig) authorized = true;
+            }
+          } catch (e) {
+            const parts = token.split("::");
+            if (parts.length === 3 && Date.now() <= parseInt(parts[1], 10)) {
+              const expectedSig = await hmacSha256(`session:${parts[0]}:${parts[1]}`, secret);
+              if (expectedSig === parts[2]) authorized = true;
+            }
+          }
+        }
+
+        if (!authorized) {
+          return new Response(JSON.stringify({ success: false, message: "Unauthorized admin request." }), {
+            status: 401,
+            headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
+          });
+        }
+
+        const { type, data } = body;
+        const validTypes = ["artworks", "dignitaries", "timeline", "certificates"];
+        if (!validTypes.includes(type) || !Array.isArray(data)) {
+          return new Response(JSON.stringify({ success: false, message: "Invalid content type or data." }), {
+            status: 400,
+            headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
+          });
+        }
+
+        if (env.ORDERS_KV) {
+          await env.ORDERS_KV.put("custom_" + type, JSON.stringify(data));
+          return new Response(JSON.stringify({ success: true, type, count: data.length }), {
+            headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
+          });
+        }
+
+        return new Response(JSON.stringify({ success: false, message: "KV store not bound." }), {
+          status: 500,
+          headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
+        });
+      } catch (err) {
+        return new Response(JSON.stringify({ success: false, message: err.message }), {
+          status: 500,
+          headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
+        });
+      }
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // 7. Admin Bulk Content Sync (Sync all local collections to KV)
+    // ─────────────────────────────────────────────────────────────
+    if (url.pathname === "/api/admin/content/bulk-sync" && request.method === "POST") {
+      try {
+        const body = await request.json().catch(() => ({}));
+        const authHeader = request.headers.get("Authorization") || "";
+        const token = body.sessionToken || (authHeader.startsWith("Bearer ") ? authHeader.substring(7) : "");
+        const pin = body.pin || "";
+
+        let authorized = false;
+        if (pin === "2025") {
+          authorized = true;
+        } else if (token) {
+          try {
+            const parsed = JSON.parse(atob(token));
+            if (parsed.email && parsed.expiresAt && parsed.sig && Date.now() <= parsed.expiresAt) {
+              const expectedSig = await hmacSha256(`session:${parsed.email}:${parsed.expiresAt}`, secret);
+              if (expectedSig === parsed.sig) authorized = true;
+            }
+          } catch (e) {
+            const parts = token.split("::");
+            if (parts.length === 3 && Date.now() <= parseInt(parts[1], 10)) {
+              const expectedSig = await hmacSha256(`session:${parts[0]}:${parts[1]}`, secret);
+              if (expectedSig === parts[2]) authorized = true;
+            }
+          }
+        }
+
+        if (!authorized) {
+          return new Response(JSON.stringify({ success: false, message: "Unauthorized admin request." }), {
+            status: 401,
+            headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
+          });
+        }
+
+        if (env.ORDERS_KV) {
+          const promises = [];
+          if (Array.isArray(body.artworks)) promises.push(env.ORDERS_KV.put("custom_artworks", JSON.stringify(body.artworks)));
+          if (Array.isArray(body.dignitaries)) promises.push(env.ORDERS_KV.put("custom_dignitaries", JSON.stringify(body.dignitaries)));
+          if (Array.isArray(body.timeline)) promises.push(env.ORDERS_KV.put("custom_timeline", JSON.stringify(body.timeline)));
+          if (Array.isArray(body.certificates)) promises.push(env.ORDERS_KV.put("custom_certificates", JSON.stringify(body.certificates)));
+
+          await Promise.all(promises);
+          return new Response(JSON.stringify({ success: true, count: promises.length }), {
+            headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
+          });
+        }
+
+        return new Response(JSON.stringify({ success: false, message: "KV store not bound." }), {
+          status: 500,
+          headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
+        });
+      } catch (err) {
+        return new Response(JSON.stringify({ success: false, message: err.message }), {
+          status: 500,
+          headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
+        });
+      }
+    }
+
     // 5. Fallback to Static Assets (HTML, CSS, JS, images)
     try {
       return await env.ASSETS.fetch(request);

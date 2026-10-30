@@ -3,7 +3,7 @@ import {
   Lock, PlusCircle, Image as ImageIcon, CheckCircle, Trash2, 
   Eye, MessageSquare, Phone, MapPin, Clock, Tag, RefreshCw, LogOut, ArrowRight, Upload,
   Award, FileText, CheckCircle2, Users, Calendar, Medal, Sparkles, Shield, Mail, KeyRound, ArrowLeft,
-  Pencil, X
+  Pencil, X, Cloud, UploadCloud
 } from 'lucide-react';
 import { CATEGORIES } from '../data/artworks';
 import defaultArtImage from '../assets/charcoal_portrait_2.jpeg';
@@ -187,6 +187,122 @@ export default function Admin({
     }
   }, [resendCooldown]);
 
+  // Cloud Sync state: 'idle' | 'syncing' | 'saved' | 'error'
+  const [cloudSyncStatus, setCloudSyncStatus] = useState('idle');
+
+  const syncContentToCloud = async (type, data) => {
+    setCloudSyncStatus('syncing');
+    try {
+      const sessionToken = localStorage.getItem('arthurvisions_admin_session') || sessionStorage.getItem('arthurvisions_admin_session') || '';
+      const pin = localStorage.getItem('arthurvisions_admin_pin') || sessionStorage.getItem('arthurvisions_admin_pin') || '';
+      const res = await fetch('/api/admin/content/update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type, data, sessionToken, pin })
+      });
+      const result = await res.json();
+      if (result.success) {
+        setCloudSyncStatus('saved');
+        setTimeout(() => setCloudSyncStatus('idle'), 3000);
+      } else {
+        setCloudSyncStatus('error');
+        setTimeout(() => setCloudSyncStatus('idle'), 4000);
+      }
+    } catch (err) {
+      console.error(`Failed to sync ${type} to cloud:`, err);
+      setCloudSyncStatus('error');
+      setTimeout(() => setCloudSyncStatus('idle'), 4000);
+    }
+  };
+
+  const syncAllToCloud = async () => {
+    setCloudSyncStatus('syncing');
+    try {
+      const sessionToken = localStorage.getItem('arthurvisions_admin_session') || sessionStorage.getItem('arthurvisions_admin_session') || '';
+      const pin = localStorage.getItem('arthurvisions_admin_pin') || sessionStorage.getItem('arthurvisions_admin_pin') || '';
+      
+      const res = await fetch('/api/admin/content/bulk-sync', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          artworks,
+          dignitaries,
+          timeline: timelineAwards,
+          certificates,
+          sessionToken,
+          pin
+        })
+      });
+      const result = await res.json();
+      if (result.success) {
+        setCloudSyncStatus('saved');
+        setTimeout(() => setCloudSyncStatus('idle'), 3000);
+      } else {
+        setCloudSyncStatus('error');
+        setTimeout(() => setCloudSyncStatus('idle'), 4000);
+      }
+    } catch (err) {
+      console.error('Failed to bulk sync to cloud:', err);
+      setCloudSyncStatus('error');
+      setTimeout(() => setCloudSyncStatus('idle'), 4000);
+    }
+  };
+
+  // Auto-sync any local customizations to Cloudflare KV when logged in
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    const sessionToken = localStorage.getItem('arthurvisions_admin_session') || sessionStorage.getItem('arthurvisions_admin_session') || '';
+    const pin = localStorage.getItem('arthurvisions_admin_pin') || sessionStorage.getItem('arthurvisions_admin_pin') || '';
+
+    fetch('/api/content')
+      .then(res => res.json())
+      .then(cloud => {
+        const toSync = {};
+        const localArtworksRaw = localStorage.getItem('arthurvisions_custom_artworks');
+        if (localArtworksRaw) {
+          try {
+            const parsed = JSON.parse(localArtworksRaw);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              const hasMouthOrgan = parsed.some(a => 
+                (typeof a.title === 'string' && a.title.toLowerCase().includes('mouth organ')) ||
+                (typeof a.description === 'string' && a.description.toLowerCase().includes('mouth organ'))
+              );
+              if (!cloud.artworks || hasMouthOrgan || parsed.length !== cloud.artworks?.length) {
+                toSync.artworks = parsed;
+              }
+            }
+          } catch(e){}
+        }
+
+        const localDigRaw = localStorage.getItem('arthurvisions_custom_dignitaries');
+        if (localDigRaw && !cloud.dignitaries) {
+          try { toSync.dignitaries = JSON.parse(localDigRaw); } catch(e){}
+        }
+        const localTimeRaw = localStorage.getItem('arthurvisions_custom_timeline');
+        if (localTimeRaw && !cloud.timeline) {
+          try { toSync.timeline = JSON.parse(localTimeRaw); } catch(e){}
+        }
+        const localCertRaw = localStorage.getItem('arthurvisions_custom_certificates');
+        if (localCertRaw && !cloud.certificates) {
+          try { toSync.certificates = JSON.parse(localCertRaw); } catch(e){}
+        }
+
+        if (Object.keys(toSync).length > 0) {
+          fetch('/api/admin/content/bulk-sync', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ...toSync, sessionToken, pin })
+          }).then(r => r.json()).then(res => {
+            if (res.success) {
+              setCloudSyncStatus('saved');
+              setTimeout(() => setCloudSyncStatus('idle'), 3000);
+            }
+          }).catch(() => {});
+        }
+      })
+      .catch(() => {});
+  }, [isAuthenticated]);
+
   const handleSendOtp = async (e) => {
     e.preventDefault();
     setAuthError('');
@@ -308,6 +424,7 @@ export default function Admin({
     const updated = [createdPiece, ...artworks];
     setArtworks(updated);
     localStorage.setItem('arthurvisions_custom_artworks', JSON.stringify(updated));
+    syncContentToCloud('artworks', updated);
 
     setPublishedSuccess(true);
     setNewArt({
@@ -341,6 +458,7 @@ export default function Admin({
     });
     setArtworks(updated);
     localStorage.setItem('arthurvisions_custom_artworks', JSON.stringify(updated));
+    syncContentToCloud('artworks', updated);
   };
 
   const handleDeleteArt = (id) => {
@@ -348,6 +466,7 @@ export default function Admin({
       const updated = artworks.filter(a => a.id !== id);
       setArtworks(updated);
       localStorage.setItem('arthurvisions_custom_artworks', JSON.stringify(updated));
+      syncContentToCloud('artworks', updated);
     }
   };
 
@@ -416,6 +535,7 @@ export default function Admin({
     const updated = [createdCert, ...certificates];
     setCertificates(updated);
     localStorage.setItem('arthurvisions_custom_certificates', JSON.stringify(updated));
+    syncContentToCloud('certificates', updated);
 
     setNewCert({
       title: '',
@@ -434,6 +554,7 @@ export default function Admin({
       const updated = certificates.filter((c, idx) => (c.id || `cert-${idx}`) !== identifier && c.title !== identifier);
       setCertificates(updated);
       localStorage.setItem('arthurvisions_custom_certificates', JSON.stringify(updated));
+      syncContentToCloud('certificates', updated);
     }
   };
 
@@ -470,6 +591,7 @@ export default function Admin({
     const updated = [created, ...dignitaries];
     setDignitaries(updated);
     localStorage.setItem('arthurvisions_custom_dignitaries', JSON.stringify(updated));
+    syncContentToCloud('dignitaries', updated);
 
     setNewDignitary({
       name: '',
@@ -489,6 +611,7 @@ export default function Admin({
       const updated = dignitaries.filter((d, idx) => (d.id || `dig-${idx}`) !== identifier && d.name !== identifier);
       setDignitaries(updated);
       localStorage.setItem('arthurvisions_custom_dignitaries', JSON.stringify(updated));
+      syncContentToCloud('dignitaries', updated);
     }
   };
 
@@ -506,6 +629,7 @@ export default function Admin({
     const updated = [created, ...timelineAwards];
     setTimelineAwards(updated);
     localStorage.setItem('arthurvisions_custom_timeline', JSON.stringify(updated));
+    syncContentToCloud('timeline', updated);
 
     setNewTimeline({
       year: new Date().getFullYear().toString(),
@@ -522,6 +646,7 @@ export default function Admin({
       const updated = timelineAwards.filter((t, idx) => (t.id || `time-${idx}`) !== identifier && t.title !== identifier);
       setTimelineAwards(updated);
       localStorage.setItem('arthurvisions_custom_timeline', JSON.stringify(updated));
+      syncContentToCloud('timeline', updated);
     }
   };
 
@@ -542,6 +667,7 @@ export default function Admin({
     const updated = artworks.map(a => a.id === editingArt.id ? editingArt : a);
     setArtworks(updated);
     localStorage.setItem('arthurvisions_custom_artworks', JSON.stringify(updated));
+    syncContentToCloud('artworks', updated);
     setEditingArt(null);
   };
 
@@ -563,6 +689,7 @@ export default function Admin({
     });
     setCertificates(updated);
     localStorage.setItem('arthurvisions_custom_certificates', JSON.stringify(updated));
+    syncContentToCloud('certificates', updated);
     setEditingCert(null);
   };
 
@@ -585,6 +712,7 @@ export default function Admin({
     });
     setDignitaries(updated);
     localStorage.setItem('arthurvisions_custom_dignitaries', JSON.stringify(updated));
+    syncContentToCloud('dignitaries', updated);
     setEditingDignitary(null);
   };
 
@@ -605,6 +733,7 @@ export default function Admin({
     });
     setTimelineAwards(updated);
     localStorage.setItem('arthurvisions_custom_timeline', JSON.stringify(updated));
+    syncContentToCloud('timeline', updated);
     setEditingTimeline(null);
   };
 
@@ -903,6 +1032,35 @@ export default function Admin({
               Orders ({orders.length})
             </button>
           </div>
+
+          <button
+            onClick={syncAllToCloud}
+            disabled={cloudSyncStatus === 'syncing'}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#DDD3C3] text-xs font-semibold text-[#5A554F] hover:text-[#B5502F] hover:bg-[#FAF7F2] transition-all cursor-pointer"
+            title="Sync all artworks and recognitions to Cloudflare globally"
+          >
+            {cloudSyncStatus === 'syncing' ? (
+              <>
+                <RefreshCw className="w-3.5 h-3.5 animate-spin text-[#B5502F]" />
+                <span className="hidden md:inline">Syncing...</span>
+              </>
+            ) : cloudSyncStatus === 'saved' ? (
+              <>
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                <span className="text-emerald-700">Synced</span>
+              </>
+            ) : cloudSyncStatus === 'error' ? (
+              <>
+                <Cloud className="w-3.5 h-3.5 text-red-500" />
+                <span className="text-red-600">Retry</span>
+              </>
+            ) : (
+              <>
+                <UploadCloud className="w-3.5 h-3.5 text-[#B5502F]" />
+                <span className="hidden md:inline">Sync to Cloud</span>
+              </>
+            )}
+          </button>
 
           <button
             onClick={handleLogout}

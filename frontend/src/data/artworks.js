@@ -34,13 +34,13 @@ export const ARTWORKS_DATA = [
   },
   {
     id: "art-charcoal-2",
-    title: "Old Sage of Mithila",
+    title: "Mouth Organ (मुँह का बाजा)",
     medium: "Charcoal on Archival Paper",
     category: "Charcoal",
     dimensions: "12 × 16 in (A3)",
     year: "2024",
     status: "Commissioned",
-    description: "Deep tonal study in vine and compressed charcoal, exploring expressions of resilience and wisdom.",
+    description: "Deep tonal study in vine and compressed charcoal, exploring musical expression, soulfulness, and timeless nostalgia.",
     image: charcoal2,
     featured: true
   },

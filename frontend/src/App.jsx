@@ -85,6 +85,40 @@ export default function App() {
     }
   }, []);
 
+  // Global Cloud Sync: Load live artworks & recognitions from Cloudflare KV across all devices
+  useEffect(() => {
+    let isMounted = true;
+    async function loadCloudContent() {
+      try {
+        const res = await fetch('/api/content');
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!isMounted) return;
+
+        if (Array.isArray(data.artworks) && data.artworks.length > 0) {
+          setArtworks(data.artworks);
+          localStorage.setItem('arthurvisions_custom_artworks', JSON.stringify(data.artworks));
+        }
+        if (Array.isArray(data.dignitaries) && data.dignitaries.length > 0) {
+          setDignitaries(data.dignitaries);
+          localStorage.setItem('arthurvisions_custom_dignitaries', JSON.stringify(data.dignitaries));
+        }
+        if (Array.isArray(data.timeline) && data.timeline.length > 0) {
+          setTimelineAwards(data.timeline);
+          localStorage.setItem('arthurvisions_custom_timeline', JSON.stringify(data.timeline));
+        }
+        if (Array.isArray(data.certificates) && data.certificates.length > 0) {
+          setCertificates(data.certificates);
+          localStorage.setItem('arthurvisions_custom_certificates', JSON.stringify(data.certificates));
+        }
+      } catch (err) {
+        console.warn('Could not load cloud content, using local fallback:', err);
+      }
+    }
+    loadCloudContent();
+    return () => { isMounted = false; };
+  }, []);
+
   const handlePageChange = (page) => {
     setActivePage(page);
     window.location.hash = page;
