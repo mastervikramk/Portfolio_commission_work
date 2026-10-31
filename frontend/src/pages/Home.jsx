@@ -1,13 +1,24 @@
-import React, { useState } from 'react';
-import { ArrowRight, Sparkles, Award, ShieldCheck, Play, MessageCircle, CheckCircle2, ChevronRight, Eye, ExternalLink } from 'lucide-react';
-import CommissionEstimator from '../components/CommissionEstimator';
+import React, { useState, useEffect } from 'react';
+import { ArrowRight, Play, CheckCircle2, Eye, ExternalLink } from 'lucide-react';
 import { SITE_CONFIG } from '../config/site';
 
 export default function Home({ artworks, setActivePage, onOpenLightbox, setSelectedArtConfig }) {
   const [activeSlide, setActiveSlide] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
 
   // Hero carousel highlights
   const heroWorks = artworks.filter(a => a.featured).slice(0, 4);
+
+  // Auto-slide every 2 seconds with pause-on-hover
+  useEffect(() => {
+    if (heroWorks.length <= 1 || isPaused) return;
+
+    const timer = setInterval(() => {
+      setActiveSlide((prev) => (prev + 1) % heroWorks.length);
+    }, 2000);
+
+    return () => clearInterval(timer);
+  }, [heroWorks.length, isPaused]);
 
   const handleOrderRedirect = (config) => {
     if (setSelectedArtConfig) {
@@ -46,7 +57,7 @@ export default function Home({ artworks, setActivePage, onOpenLightbox, setSelec
 
               {/* Subtitle */}
               <p className="text-base sm:text-lg text-[#5A554F] leading-relaxed max-w-2xl font-light">
-                Preserving emotion in every stroke. Master of realistic charcoal, oil, watercolor, and traditional <strong>Vajjika folk art</strong>. Mentored under NIFT Delhi faculty & 1st Rank winner at District Level Youth Festivals.
+                Preserving emotion in every stroke. Handcrafting <strong>lifelike custom portraits</strong>, authentic <strong>Vajjika art on sarees & products</strong>, and <strong>live event guest sketching</strong> across India. Mentored under NIFT Delhi faculty & recognized by cultural dignitaries.
               </p>
 
               {/* CTA Buttons */}
@@ -55,7 +66,7 @@ export default function Home({ artworks, setActivePage, onOpenLightbox, setSelec
                   onClick={() => handleOrderRedirect(null)}
                   className="px-8 py-4 rounded-full bg-[#B5502F] text-white hover:bg-[#9B4224] font-medium text-base shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-3 group cursor-pointer"
                 >
-                  <span>Commission a Custom Portrait</span>
+                  <span>Start an Order</span>
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </button>
 
@@ -64,10 +75,10 @@ export default function Home({ artworks, setActivePage, onOpenLightbox, setSelec
                     setActivePage('gallery');
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
-                  className="px-7 py-4 rounded-full bg-white border border-[#DDD3C3] text-[#1F1D1B] hover:bg-[#F0E9DC] font-medium text-base transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+                  className="px-7 py-4 rounded-full bg-white border border-[#DDD3C3] text-[#1F1D1B] hover:bg-[#FAF7F2] font-medium text-base transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs hover:border-[#B5502F]/40"
                 >
                   <Eye className="w-4 h-4 text-[#5A554F]" />
-                  <span>Explore Gallery</span>
+                  <span>View Gallery</span>
                 </button>
               </div>
 
@@ -96,8 +107,12 @@ export default function Home({ artworks, setActivePage, onOpenLightbox, setSelec
                 {/* Decorative Frame Glow */}
                 <div className="absolute -inset-2 bg-gradient-to-tr from-[#B5502F]/20 via-[#C99A2E]/20 to-transparent rounded-3xl blur-xl" />
                 
-                {/* Art Frame Container */}
-                <div className="relative bg-white p-3.5 sm:p-4 rounded-2xl shadow-xl border border-[#DDD3C3]">
+                {/* Art Frame Container with Auto-slide & Pause on Hover */}
+                <div
+                  className="relative bg-white p-3.5 sm:p-4 rounded-2xl shadow-xl border border-[#DDD3C3]"
+                  onMouseEnter={() => setIsPaused(true)}
+                  onMouseLeave={() => setIsPaused(false)}
+                >
                   <div className="relative aspect-4/5 overflow-hidden rounded-xl bg-[#1F1D1B] group">
                     {heroWorks.map((work, idx) => (
                       <img
@@ -184,34 +199,42 @@ export default function Home({ artworks, setActivePage, onOpenLightbox, setSelec
         </div>
       </section>
 
-      {/* 3. WHAT I CREATE (COLLECTIONS OVERVIEW) */}
+      {/* 3. WHAT WE CREATE FOR YOU (3 CORE WEBSITE OFFERINGS) */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-14 space-y-3">
           <span className="text-xs font-semibold uppercase tracking-widest text-[#B5502F]">
-            Artistic Mastery & Mediums
+            What We Create For You
           </span>
           <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#1F1D1B]">
-            From Intimate Charcoal to Heritage Folk Canvases
+            Three Ways to Experience Arthur Visions
           </h2>
           <p className="text-sm sm:text-base text-[#5A554F]">
-            Every medium is approached with authentic archival supplies, deep emotion, and painstaking precision.
+            Whether immortalizing a loved one from a photograph, collecting rare regional heritage, or creating live memories at your celebrations.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           
-          {/* Card 1: Custom Portraits */}
+          {/* Card 1: Custom Handmade Portraits */}
           <div className="bg-white p-6 sm:p-8 rounded-2xl border border-[#DDD3C3] shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
             <div className="space-y-4">
-              <div className="w-12 h-12 rounded-xl bg-[#F8ECE7] text-[#B5502F] flex items-center justify-center font-serif text-2xl font-bold">
-                01
+              <div className="flex items-center justify-between">
+                <div className="w-12 h-12 rounded-xl bg-[#F8ECE7] text-[#B5502F] flex items-center justify-center font-serif text-2xl font-bold">
+                  01
+                </div>
+                <span className="text-[11px] font-semibold tracking-wide uppercase px-2.5 py-1 rounded-full bg-[#F8ECE7] text-[#B5502F]">
+                  Photo to Painting
+                </span>
               </div>
+              
               <h3 className="font-serif text-2xl font-bold text-[#1F1D1B]">
-                Bespoke Realistic Portraits
+                Custom Handmade Portraits
               </h3>
+              
               <p className="text-sm text-[#5A554F] leading-relaxed">
-                Hyper-realistic hand-drawn tributes of your loved ones, grandparents, babies, or wedding memories. Crafted in vine charcoal, graphite, watercolor, or classical oil paint.
+                Lifelike hand-drawn and painted tributes of your loved ones, grandparents, babies, or wedding memories. Handcrafted in realistic acrylic, charcoal, pencil, or classical oil paint.
               </p>
+              
               <ul className="text-xs text-[#5A554F] space-y-1.5 pt-2">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-3.5 h-3.5 text-[#6B7F5E]" />
@@ -223,13 +246,14 @@ export default function Home({ artworks, setActivePage, onOpenLightbox, setSelec
                 </li>
               </ul>
             </div>
+            
             <div className="pt-6 border-t border-[#DDD3C3]/60 mt-6">
               <button
-                onClick={() => handleOrderRedirect({ medium: "Charcoal & Pencil Sketch" })}
-                className="text-sm font-semibold text-[#B5502F] group-hover:text-[#9B4224] flex items-center gap-1.5 cursor-pointer"
+                onClick={() => handleOrderRedirect({ serviceType: 'portrait', medium: "Charcoal & Pencil" })}
+                className="w-full py-3.5 px-4 rounded-xl bg-[#B5502F] hover:bg-[#9B4224] text-white font-semibold text-sm flex items-center justify-center gap-2 shadow-xs transition-all cursor-pointer group"
               >
-                <span>Commission a Portrait</span>
-                <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <span>Order a Portrait</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
           </div>
@@ -237,15 +261,23 @@ export default function Home({ artworks, setActivePage, onOpenLightbox, setSelec
           {/* Card 2: Traditional Vajjika Art */}
           <div className="bg-white p-6 sm:p-8 rounded-2xl border border-[#DDD3C3] shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
             <div className="space-y-4">
-              <div className="w-12 h-12 rounded-xl bg-[#FBF5E6] text-[#C99A2E] flex items-center justify-center font-serif text-2xl font-bold">
-                02
+              <div className="flex items-center justify-between">
+                <div className="w-12 h-12 rounded-xl bg-[#FBF5E6] text-[#C99A2E] flex items-center justify-center font-serif text-2xl font-bold">
+                  02
+                </div>
+                <span className="text-[11px] font-semibold tracking-wide uppercase px-2.5 py-1 rounded-full bg-[#FBF5E6] text-[#8C6615]">
+                  Authentic Heritage Art
+                </span>
               </div>
+
               <h3 className="font-serif text-2xl font-bold text-[#1F1D1B]">
                 Vajjika Folk Art (वज्जिका)
               </h3>
+              
               <p className="text-sm text-[#5A554F] leading-relaxed">
-                Rare, ancient folk art tradition of the historic Vaishali-Muzaffarpur belt. Celebrated for distinctive natural motifs, sacred fertility symbols, and cultural storytelling.
+                Rare, ancient folk art tradition of Vaishali. Available as hand-painted Tussar silk sarees, designer handbags, sling bags, clutches, coin pouches, and fine art canvases.
               </p>
+              
               <ul className="text-xs text-[#5A554F] space-y-1.5 pt-2">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-3.5 h-3.5 text-[#C99A2E]" />
@@ -257,16 +289,14 @@ export default function Home({ artworks, setActivePage, onOpenLightbox, setSelec
                 </li>
               </ul>
             </div>
+            
             <div className="pt-6 border-t border-[#DDD3C3]/60 mt-6">
               <button
-                onClick={() => {
-                  setActivePage('gallery');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-                className="text-sm font-semibold text-[#B5502F] group-hover:text-[#9B4224] flex items-center gap-1.5 cursor-pointer"
+                onClick={() => handleOrderRedirect({ serviceType: 'vajjika' })}
+                className="w-full py-3.5 px-4 rounded-xl bg-[#B5502F] hover:bg-[#9B4224] text-white font-semibold text-sm flex items-center justify-center gap-2 shadow-xs transition-all cursor-pointer group"
               >
-                <span>View Vajjika Collection</span>
-                <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <span>Inquire Sarees & Products</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
           </div>
@@ -274,15 +304,23 @@ export default function Home({ artworks, setActivePage, onOpenLightbox, setSelec
           {/* Card 3: Live Event Portraits */}
           <div className="bg-white p-6 sm:p-8 rounded-2xl border border-[#DDD3C3] shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
             <div className="space-y-4">
-              <div className="w-12 h-12 rounded-xl bg-[#EAEFF7] text-[#2F3E5C] flex items-center justify-center font-serif text-2xl font-bold">
-                03
+              <div className="flex items-center justify-between">
+                <div className="w-12 h-12 rounded-xl bg-[#EAEFF7] text-[#2F3E5C] flex items-center justify-center font-serif text-2xl font-bold">
+                  03
+                </div>
+                <span className="text-[11px] font-semibold tracking-wide uppercase px-2.5 py-1 rounded-full bg-[#EAEFF7] text-[#23314B]">
+                  Weddings & VIP Galas
+                </span>
               </div>
+
               <h3 className="font-serif text-2xl font-bold text-[#1F1D1B]">
                 Live Guest Event Sketching
               </h3>
+              
               <p className="text-sm text-[#5A554F] leading-relaxed">
-                Add an unforgettable artistic element to weddings, receptions, and VIP conclaves. Fast 8–10 minute live portraits for your honored guests as custom keepsakes.
+                Add an unforgettable artistic element to weddings, receptions, and VIP conclaves. Detailed 15–20 minute live portraits for your honored guests as custom keepsakes.
               </p>
+              
               <ul className="text-xs text-[#5A554F] space-y-1.5 pt-2">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-3.5 h-3.5 text-[#2F3E5C]" />
@@ -294,16 +332,14 @@ export default function Home({ artworks, setActivePage, onOpenLightbox, setSelec
                 </li>
               </ul>
             </div>
+            
             <div className="pt-6 border-t border-[#DDD3C3]/60 mt-6">
               <button
-                onClick={() => {
-                  setActivePage('contact');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-                className="text-sm font-semibold text-[#B5502F] group-hover:text-[#9B4224] flex items-center gap-1.5 cursor-pointer"
+                onClick={() => handleOrderRedirect({ serviceType: 'event' })}
+                className="w-full py-3.5 px-4 rounded-xl bg-[#B5502F] hover:bg-[#9B4224] text-white font-semibold text-sm flex items-center justify-center gap-2 shadow-xs transition-all cursor-pointer group"
               >
                 <span>Book for Live Events</span>
-                <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
           </div>
@@ -375,38 +411,35 @@ export default function Home({ artworks, setActivePage, onOpenLightbox, setSelec
         </div>
       </section>
 
-      {/* 5. INTERACTIVE COMMISSION ESTIMATOR SECTION */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <CommissionEstimator onSelectConfig={handleOrderRedirect} />
-      </section>
-
-      {/* 6. STUDIO PROCESS & YOUTUBE SHOWCASE */}
+      {/* 5. STUDIO PROCESS & ARTWORK IN MOTION */}
       <section className="bg-[#FAF7F2] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-[#F0E9DC] rounded-3xl p-8 sm:p-12 border border-[#DDD3C3] grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           
           <div className="lg:col-span-7 space-y-5 text-left">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FAF7F2] text-[#B5502F] text-xs font-semibold uppercase tracking-wider border border-[#DDD3C3]">
               <Play className="w-3.5 h-3.5 fill-current" />
-              <span>Latest YouTube Short</span>
+              <span>Studio in Motion</span>
             </span>
+            
             <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#1F1D1B]">
-              Watch Time-Lapses on Arthur Visions YouTube
+              See the Artwork Come to Life
             </h2>
+            
             <p className="text-sm sm:text-base text-[#5A554F] leading-relaxed">
-              Witness hundreds of hours of delicate hand strokes condensed into mesmerizing time-lapses. From blank archival cotton sheets to lifelike eyes, experience the dedication behind every original creation.
+              Step inside the studio. Watch raw pencil lines, delicate acrylic layers, and realistic textures come together on canvas right from the artist's easel.
             </p>
 
             <div className="p-4 rounded-2xl bg-[#FAF7F2] border border-[#DDD3C3] flex items-center justify-between gap-4">
               <div className="space-y-0.5">
                 <span className="text-[11px] font-semibold uppercase tracking-wider text-[#B5502F] flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-[#B5502F] animate-pulse" />
-                  Now Playing Latest Short
+                  Featured Studio Video
                 </span>
                 <p className="font-serif font-bold text-base text-[#1F1D1B]">
                   {SITE_CONFIG.latestShortTitle}
                 </p>
                 <p className="text-xs text-[#5A554F]">
-                  Channel: {SITE_CONFIG.youtubeHandle}
+                  Studio: {SITE_CONFIG.youtubeHandle}
                 </p>
               </div>
               <a
@@ -427,7 +460,7 @@ export default function Home({ artworks, setActivePage, onOpenLightbox, setSelec
                 rel="noopener noreferrer"
                 className="px-6 py-3 rounded-full bg-[#B5502F] text-white hover:bg-[#9B4224] text-sm font-semibold transition-all shadow-sm flex items-center gap-2"
               >
-                <span>Browse All Shorts</span>
+                <span>Explore More Works in Action</span>
                 <ArrowRight className="w-4 h-4" />
               </a>
               <a
@@ -436,7 +469,8 @@ export default function Home({ artworks, setActivePage, onOpenLightbox, setSelec
                 rel="noopener noreferrer"
                 className="px-6 py-3 rounded-full bg-white border border-[#DDD3C3] text-[#1F1D1B] hover:bg-[#FAF7F2] text-sm font-semibold transition-all shadow-2xs flex items-center gap-2"
               >
-                <span>Subscribe on YouTube</span>
+                <span>Open on YouTube</span>
+                <ExternalLink className="w-3.5 h-3.5 text-[#5A554F]" />
               </a>
             </div>
           </div>
@@ -454,39 +488,6 @@ export default function Home({ artworks, setActivePage, onOpenLightbox, setSelec
             </div>
           </div>
 
-        </div>
-      </section>
-
-      {/* 7. BOTTOM ORDER CTA BANNER */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <div className="bg-gradient-to-b from-[#FAF7F2] to-[#F0E9DC] p-10 sm:p-16 rounded-3xl border border-[#DDD3C3] shadow-md space-y-6">
-          <span className="text-xs font-semibold uppercase tracking-widest text-[#B5502F]">
-            Turn Memories Into Timeless Art
-          </span>
-          <h2 className="font-serif text-3xl sm:text-5xl font-bold text-[#1F1D1B] max-w-2xl mx-auto leading-tight">
-            Ready to Commission Your Own Custom Artwork?
-          </h2>
-          <p className="text-sm sm:text-base text-[#5A554F] max-w-xl mx-auto">
-            Share your reference photo and receive a personalized quote directly on WhatsApp within 2 hours. Delivery guaranteed across all Indian pin codes.
-          </p>
-          <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button
-              onClick={() => handleOrderRedirect(null)}
-              className="px-8 py-4 rounded-full bg-[#B5502F] text-white hover:bg-[#9B4224] font-medium text-base shadow-md transition-all flex items-center gap-2 cursor-pointer"
-            >
-              <span>Get Your Portrait Started</span>
-              <ArrowRight className="w-5 h-5" />
-            </button>
-            <a
-              href={SITE_CONFIG.getWhatsAppUrl("Hi Vinita, I would like to discuss a portrait order.")}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-8 py-4 rounded-full bg-white border border-[#DDD3C3] text-[#1F1D1B] hover:bg-[#FAF7F2] font-medium text-base transition-all flex items-center gap-2 shadow-2xs"
-            >
-              <MessageCircle className="w-5 h-5 text-[#25D366] fill-current" />
-              <span>Direct WhatsApp Discussion</span>
-            </a>
-          </div>
         </div>
       </section>
 

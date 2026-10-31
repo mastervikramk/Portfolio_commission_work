@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mail, Phone, MapPin, Heart, ShieldCheck, MessageCircle } from 'lucide-react';
+import { Mail, Phone, MapPin, Heart, ShieldCheck } from 'lucide-react';
 import { YoutubeIcon, InstagramIcon } from './SocialIcons';
 import { SITE_CONFIG } from '../config/site';
 import logoImage from '../assets/logo.png';
@@ -142,7 +142,7 @@ export default function Footer({ setActivePage }) {
           {/* Studio Contact */}
           <div>
             <h4 className="font-serif text-lg font-bold text-[#1F1D1B] mb-4">
-              Studio & Orders
+              Studio Contact
             </h4>
             <div className="space-y-3 text-sm text-[#5A554F]">
               <div className="flex items-start gap-2.5">
@@ -156,23 +156,15 @@ export default function Footer({ setActivePage }) {
                 </a>
               </div>
               <div className="flex items-center gap-2.5">
-                <MessageCircle className="w-4 h-4 text-[#25D366] shrink-0 fill-current" />
-                <a 
-                  href={SITE_CONFIG.getWhatsAppUrl("Hi Vinita, I have an inquiry regarding your art.")}
+                <Phone className="w-4 h-4 text-[#25D366] shrink-0" />
+                <a
+                  href={SITE_CONFIG.getWhatsAppUrl("Hi Vinita, I am reaching out through your website.")}
                   target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-[#B5502F] font-semibold text-xs text-[#1F1D1B] flex items-center gap-1"
+                  rel="noreferrer"
+                  className="hover:text-[#25D366] text-xs font-semibold"
                 >
-                  <span>Chat on WhatsApp (Online)</span>
+                  Direct WhatsApp Inquiry
                 </a>
-              </div>
-              <div className="pt-2">
-                <button
-                  onClick={() => handleLinkClick('order')}
-                  className="w-full text-center px-4 py-2.5 bg-[#B5502F] text-white rounded-lg text-xs font-semibold hover:bg-[#9B4224] transition-colors cursor-pointer"
-                >
-                  Commission a Custom Artwork
-                </button>
               </div>
             </div>
           </div>
