@@ -83,15 +83,15 @@ export const FAQS = [
   },
   {
     q: "Can I request small adjustments before it ships?",
-    a: "Absolutely. Once the artwork is completed, high-resolution photos and video angles are shared with you on WhatsApp. Minor adjustments (such as tone softening or highlighting) can be made before final sealing and framing."
+    a: "Absolutely. Once the artwork is completed, high-resolution photos and video angles are shared with you on WhatsApp. Minor adjustments (such as tone softening or highlighting) can be made before final protective sealing and dispatch."
   },
   {
-    q: "Do you offer framing services?",
-    a: "Yes. For select locations and sizes, we provide high-grade synthetic wooden frames with unbreakable acrylic glass fronts. If you prefer framing locally, we provide standard sizes (A4, A3, A2) so any standard store-bought frame fits perfectly."
+    q: "Is framing included, and how is the artwork dispatched?",
+    a: "All commissioned artworks are dispatched securely without framing, gently rolled inside thick, water-resistant rigid PVC mailing pipes with shockproof foam end-caps. This completely eliminates the risk of glass breakage or frame damage during courier transit. Courier charges are excluded from the artwork price and calculated at actuals based on your delivery pin code. Standard sizes (A4, A3, A2) are used so you can easily frame it locally to suit your home interior."
   },
   {
     q: "Can she be booked for Live Portraits at weddings and events?",
-    a: "Yes! She provides live guest portrait sketching for destination weddings, luxury corporate galas, and art expos. She creates memorable 8 to 10-minute guest sketches on customized branded stationery."
+    a: "Yes! She provides live guest portrait sketching for destination weddings, luxury corporate galas, and art expos. She creates memorable 15 to 20-minute live guest portraits on customized branded stationery (approx 3–4 detailed portraits per hour)."
   }
 ];
 
