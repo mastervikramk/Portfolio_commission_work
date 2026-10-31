@@ -48,7 +48,7 @@ export const ARTWORKS_DATA = [
     id: "art-vajjika-2",
     title: "Vajjika Folk Rhythm (वज्जिका कला)",
     medium: "Natural Pigments on Canvas",
-    category: "Vajjika Art",
+    category: "Vajjika Painting",
     dimensions: "18 × 24 in",
     year: "2025",
     status: "Available",
@@ -56,6 +56,19 @@ export const ARTWORKS_DATA = [
     description: "Traditional Vajjika folk art depicting the sacred harmony of flora, fauna, and rural folklore of Vaishali.",
     image: vajjika2,
     featured: true
+  },
+  {
+    id: "art-vajjika-saree-1",
+    title: "Hand-Painted Tussar Silk Saree",
+    medium: "Pure Handloom Tussar Silk with Natural Motifs",
+    category: "Vajjika Painting",
+    dimensions: "6.5 Meters (Includes Blouse)",
+    year: "2025",
+    status: "Made to Order",
+    price: "₹12,500",
+    description: "Traditional Vaishali-Vajjika folk storytelling rendered by hand on pure Bhagalpuri Tussar silk. Also customizable on designer handbags, sling bags, and party clutches.",
+    image: vajjika1,
+    featured: false
   },
   {
     id: "art-water-2",
@@ -111,11 +124,11 @@ export const ARTWORKS_DATA = [
     id: "art-8",
     title: "Vajjika Sacred Heritage & Flora",
     medium: "Acrylic & Natural Mineral Pigments on Stretched Canvas",
-    category: "Vajjika Art",
+    category: "Vajjika Painting",
     dimensions: "16 × 20 in",
     year: "2025",
     status: "Commissioned",
-    description: "Detailed folk motifs celebrating local flora, sacred biodiversity, and auspicious patterns.",
+    description: "Detailed folk motifs celebrating local flora, sacred biodiversity, and auspicious patterns on fine art stretched canvas.",
     image: vajjika1,
     featured: false
   },
@@ -173,12 +186,12 @@ export const ARTWORKS_DATA = [
     id: "art-13",
     title: "Vajjika Auspicious Folklore",
     medium: "Handmade Natural Pigments on Raw Canvas",
-    category: "Vajjika Art",
+    category: "Vajjika Painting",
     dimensions: "18 × 24 in",
     year: "2025",
     status: "Available",
     price: "₹9,500",
-    description: "Intricate symbolic geometry and storytelling celebrating indigenous Vaishali folk tradition.",
+    description: "Intricate symbolic geometry and storytelling celebrating indigenous Vaishali folk tradition on raw fine-art canvas.",
     image: vajjika3,
     featured: false
   },
@@ -218,7 +231,7 @@ export const CATEGORIES = [
   "Soft Pastel",
   "Oil",
   "Acrylic",
-  "Vajjika Art",
+  "Vajjika Painting",
   "Live Portrait"
 ];
 

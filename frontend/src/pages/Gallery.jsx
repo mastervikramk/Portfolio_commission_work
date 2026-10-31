@@ -8,12 +8,28 @@ export default function Gallery({ artworks, onOpenLightbox, onOrderSimilar }) {
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredArtworks = artworks.filter((art) => {
-    const matchesCategory =
-      selectedCategory === "All" || art.category === selectedCategory;
+    const cat = art.category || '';
+    let matchesCategory = selectedCategory === "All";
+
+    if (!matchesCategory) {
+      if (selectedCategory === "Vajjika Painting") {
+        matchesCategory = cat === "Vajjika Painting" || cat.toLowerCase().includes("vajjika");
+      } else {
+        matchesCategory = cat === selectedCategory;
+      }
+    }
+
+    const q = searchQuery.toLowerCase().trim();
     const matchesSearch =
-      art.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      art.medium.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      art.category.toLowerCase().includes(searchQuery.toLowerCase());
+      !q ||
+      (art.title || '').toLowerCase().includes(q) ||
+      (art.medium || '').toLowerCase().includes(q) ||
+      cat.toLowerCase().includes(q) ||
+      (art.description || '').toLowerCase().includes(q) ||
+      ((q.includes('saree') || q.includes('sari') || q.includes('bag') || q.includes('clutch') || q.includes('pouch') || q.includes('dupatta')) &&
+        (cat.toLowerCase().includes('saree') || cat.toLowerCase().includes('product') || (art.description || '').toLowerCase().includes('saree'))) ||
+      (q.includes('vajjika') && cat.toLowerCase().includes('vajjika'));
+
     return matchesCategory && matchesSearch;
   });
 
@@ -150,21 +166,31 @@ export default function Gallery({ artworks, onOpenLightbox, onOrderSimilar }) {
                 <div className="pt-4 border-t border-[#DDD3C3]/60 grid grid-cols-2 gap-2 text-xs">
                   <button
                     onClick={() => onOrderSimilar(art)}
-                    className="py-2.5 px-3 rounded-xl bg-[#B5502F] hover:bg-[#9B4224] text-white font-semibold transition-colors flex items-center justify-center gap-1 cursor-pointer"
+                    className="py-2.5 px-3 rounded-xl bg-[#B5502F] hover:bg-[#9B4224] text-white font-semibold transition-colors flex items-center justify-center gap-1 cursor-pointer truncate"
                   >
-                    <span>Order Similar</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    <span>
+                      {(art.title || '').toLowerCase().includes('saree')
+                        ? 'Inquire Saree'
+                        : (art.category || '').toLowerCase().includes('vajjika')
+                        ? 'Inquire Painting'
+                        : 'Order Similar'}
+                    </span>
+                    <ArrowRight className="w-3.5 h-3.5 shrink-0" />
                   </button>
 
                   <a
                     href={SITE_CONFIG.getWhatsAppUrl(
-                      `Hi Vinita, I saw your artwork "${art.title}" (${art.medium}) on your website. I want to inquire about purchasing or commissioning a similar piece.`
+                      (art.title || '').toLowerCase().includes('saree')
+                        ? `Hi Vinita, I saw your "${art.title}" in your gallery. I would like to inquire about ordering this hand-painted Saree.`
+                        : (art.category || '').toLowerCase().includes('vajjika')
+                        ? `Hi Vinita, I saw your Vajjika painting "${art.title}" in your gallery. I would like to inquire about purchasing / commissioning this piece.`
+                        : `Hi Vinita, I saw your artwork "${art.title}" (${art.medium}) on your website. I want to inquire about purchasing or commissioning a similar piece.`
                     )}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="py-2.5 px-3 rounded-xl bg-[#25D366] hover:bg-[#20ba59] text-white font-semibold transition-colors flex items-center justify-center gap-1"
                   >
-                    <MessageSquare className="w-3.5 h-3.5 fill-current" />
+                    <MessageSquare className="w-3.5 h-3.5 fill-current shrink-0" />
                     <span>WhatsApp</span>
                   </a>
                 </div>

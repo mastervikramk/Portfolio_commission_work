@@ -15,8 +15,18 @@ import Admin from './pages/Admin';
 import { ARTWORKS_DATA } from './data/artworks';
 import { DIGNITARIES, TIMELINE_AWARDS, CERTIFICATES } from './data/awards';
 
+function getInitialPage() {
+  if (typeof window === 'undefined') return 'home';
+  const pathname = window.location.pathname.replace(/^\/+|\/+$/g, '').toLowerCase();
+  const hash = window.location.hash.replace('#', '').toLowerCase();
+  const validPages = ['home', 'gallery', 'order', 'recognition', 'about', 'contact', 'admin'];
+  if (validPages.includes(pathname)) return pathname;
+  if (validPages.includes(hash)) return hash;
+  return 'home';
+}
+
 export default function App() {
-  const [activePage, setActivePage] = useState('home');
+  const [activePage, setActivePage] = useState(getInitialPage);
   const [artworks, setArtworks] = useState(() => {
     try {
       const saved = localStorage.getItem('arthurvisions_custom_artworks');
@@ -77,12 +87,27 @@ export default function App() {
   const [selectedArtConfig, setSelectedArtConfig] = useState(null);
   const [lightboxItem, setLightboxItem] = useState(null);
 
-  // Handle URL hash changes or routing
+  // Handle clean URL routing & browser Back / Forward buttons (popstate)
   useEffect(() => {
-    const hash = window.location.hash.replace('#', '');
-    if (['home', 'gallery', 'order', 'recognition', 'about', 'contact', 'admin'].includes(hash)) {
-      setActivePage(hash);
+    const handleUrlChange = () => {
+      setActivePage(getInitialPage());
+    };
+
+    // If an older link or bookmark loaded with a hash like /#contact, normalize it to /contact
+    if (window.location.hash) {
+      const legacyPage = window.location.hash.replace('#', '').toLowerCase();
+      const validPages = ['gallery', 'order', 'recognition', 'about', 'contact', 'admin'];
+      if (validPages.includes(legacyPage)) {
+        window.history.replaceState({ page: legacyPage }, '', `/${legacyPage}`);
+      }
     }
+
+    window.addEventListener('popstate', handleUrlChange);
+    window.addEventListener('hashchange', handleUrlChange);
+    return () => {
+      window.removeEventListener('popstate', handleUrlChange);
+      window.removeEventListener('hashchange', handleUrlChange);
+    };
   }, []);
 
   // Global Cloud Sync: Load live artworks & recognitions from Cloudflare KV across all devices
@@ -121,15 +146,24 @@ export default function App() {
 
   const handlePageChange = (page) => {
     setActivePage(page);
-    window.location.hash = page;
+    const newPath = page === 'home' ? '/' : `/${page}`;
+    if (window.location.pathname !== newPath) {
+      window.history.pushState({ page }, '', newPath);
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleOrderSimilar = (art) => {
+    const isVajjikaSareeOrProduct = (art?.category || '').toLowerCase().includes('saree') || (art?.category || '').toLowerCase().includes('product');
+    const isVajjikaPainting = (art?.category || '').toLowerCase().includes('vajjika');
+    const isLive = (art?.category || '').toLowerCase().includes('live');
+
     setSelectedArtConfig({
-      medium: art.medium || art.category,
-      size: art.dimensions?.includes('A3') ? 'A3' : 'A4',
+      serviceType: (isVajjikaSareeOrProduct || isVajjikaPainting) ? 'vajjika' : isLive ? 'event' : 'portrait',
+      medium: art?.medium || art?.category,
+      size: art?.dimensions?.includes('A3') ? 'A3' : 'A4',
       subjects: 1,
+      productType: isVajjikaPainting && !isVajjikaSareeOrProduct ? 'Traditional Wall Canvas Painting' : 'Hand-painted Tussar Silk Saree',
     });
     handlePageChange('order');
   };

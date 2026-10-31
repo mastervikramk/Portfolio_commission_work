@@ -125,7 +125,13 @@ export default function LightboxModal({ item, onClose, onOrderSimilar }) {
                 }}
                 className="w-full py-3 px-4 rounded-xl bg-[#B5502F] hover:bg-[#9B4224] text-white font-medium text-sm flex items-center justify-center gap-2 transition-all shadow-sm cursor-pointer"
               >
-                <span>Commission Similar Artwork</span>
+                <span>
+                  {(item.title || '').toLowerCase().includes('saree')
+                    ? 'Inquire Saree'
+                    : (item.category || '').toLowerCase().includes('vajjika')
+                    ? 'Inquire Painting'
+                    : 'Commission Similar Artwork'}
+                </span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             )}
