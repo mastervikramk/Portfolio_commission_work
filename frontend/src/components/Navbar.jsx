@@ -38,23 +38,23 @@ export default function Navbar({ activePage, setActivePage }) {
       }`}
     >
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between min-h-[4rem] sm:min-h-[5rem] py-2 gap-4">
+        <div className="flex items-center justify-between min-h-[3.75rem] sm:min-h-[5rem] py-2 gap-2 sm:gap-4">
           
           {/* Logo / Brand Name */}
           <button
             onClick={() => handleNavClick('home')}
-            className="flex items-center gap-2.5 sm:gap-3 group text-left cursor-pointer shrink-0 select-none mr-2 sm:mr-4"
+            className="flex items-center gap-2 sm:gap-3 group text-left cursor-pointer min-w-0 select-none"
           >
             <img
               src={logoImage}
               alt="Arthur Visions Logo"
-              className="w-9 h-9 sm:w-11 sm:h-11 rounded-full object-cover border border-[#DDD3C3] shadow-xs group-hover:border-[#B5502F] transition-colors shrink-0"
+              className="w-8 h-8 sm:w-11 sm:h-11 rounded-full object-cover border border-[#DDD3C3] shadow-xs group-hover:border-[#B5502F] transition-colors shrink-0"
             />
-            <div className="flex flex-col justify-center">
-              <span className="block font-serif text-[18px] sm:text-2xl font-bold tracking-wide text-[#1F1D1B] group-hover:text-[#B5502F] transition-colors leading-tight whitespace-nowrap">
+            <div className="flex flex-col justify-center min-w-0">
+              <span className="block font-serif text-[17px] sm:text-2xl font-bold tracking-wide text-[#1F1D1B] group-hover:text-[#B5502F] transition-colors leading-tight truncate">
                 Arthur Visions
               </span>
-              <span className="block text-[8.5px] sm:text-[10px] uppercase tracking-wider text-[#5A554F] font-medium leading-tight mt-0.5 whitespace-nowrap">
+              <span className="hidden sm:block text-[8.5px] sm:text-[10px] uppercase tracking-wider text-[#5A554F] font-medium leading-tight mt-0.5 truncate">
                 Portraits • Vajjika Art • Live Sketching
               </span>
             </div>
@@ -97,16 +97,16 @@ export default function Navbar({ activePage, setActivePage }) {
           <div className="flex xl:hidden items-center gap-2 shrink-0">
             <button
               onClick={() => handleNavClick('order')}
-              className="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#B5502F] text-white shadow-xs cursor-pointer whitespace-nowrap flex items-center gap-1.5"
+              className="px-3 py-1.5 rounded-full text-xs font-semibold bg-[#B5502F] text-white shadow-xs cursor-pointer whitespace-nowrap"
             >
-              <span>Order</span>
+              Order
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-1.5 rounded-lg text-[#1F1D1B] hover:bg-[#F0E9DC] transition-colors cursor-pointer"
+              className="p-1.5 rounded-lg bg-white border border-[#DDD3C3] text-[#1F1D1B] hover:text-[#B5502F] hover:bg-[#F0E9DC] transition-colors cursor-pointer shadow-2xs flex items-center justify-center"
               aria-label="Toggle menu"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? <X className="w-5 h-5 text-[#B5502F]" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
