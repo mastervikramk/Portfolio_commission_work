@@ -987,84 +987,61 @@ export default function Admin({
     <div className="pt-28 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
       
       {/* Top Bar */}
-      <div className="bg-white p-6 rounded-3xl border border-[#DDD3C3] shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <span className="text-xs font-semibold uppercase tracking-wider text-[#B5502F]">
-            Arthur Visions Control Center
-          </span>
-          <h1 className="font-serif text-3xl font-bold text-[#1F1D1B]">
-            Artist Mobile Studio
-          </h1>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1 bg-[#FAF7F2] p-1 rounded-xl border border-[#DDD3C3]">
-            <button
-              onClick={() => setActiveTab('add')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                activeTab === 'add' ? 'bg-[#B5502F] text-white shadow-2xs' : 'text-[#5A554F]'
-              }`}
-            >
-              + Add Artwork
-            </button>
-            <button
-              onClick={() => setActiveTab('catalog')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                activeTab === 'catalog' ? 'bg-[#B5502F] text-white shadow-2xs' : 'text-[#5A554F]'
-              }`}
-            >
-              Artworks ({artworks.length})
-            </button>
-            <button
-              onClick={() => setActiveTab('recognition')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                activeTab === 'recognition' || activeTab === 'certificates' ? 'bg-[#B5502F] text-white shadow-2xs' : 'text-[#5A554F]'
-              }`}
-            >
-              Honors & Recognitions ({certificates.length + dignitaries.length + timelineAwards.length})
-            </button>
-            <button
-              onClick={() => setActiveTab('orders')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                activeTab === 'orders' ? 'bg-[#B5502F] text-white shadow-2xs' : 'text-[#5A554F]'
-              }`}
-            >
-              Orders ({orders.length})
-            </button>
+      <div className="bg-white p-4 sm:p-6 rounded-3xl border border-[#DDD3C3] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex items-center justify-between w-full md:w-auto">
+          <div>
+            <span className="text-xs font-semibold uppercase tracking-wider text-[#B5502F]">
+              Arthur Visions Control Center
+            </span>
+            <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#1F1D1B]">
+              Artist Mobile Studio
+            </h1>
           </div>
-
-          <button
-            onClick={syncAllToCloud}
-            disabled={cloudSyncStatus === 'syncing'}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#DDD3C3] text-xs font-semibold text-[#5A554F] hover:text-[#B5502F] hover:bg-[#FAF7F2] transition-all cursor-pointer"
-            title="Sync all artworks and recognitions to Cloudflare globally"
-          >
-            {cloudSyncStatus === 'syncing' ? (
-              <>
-                <RefreshCw className="w-3.5 h-3.5 animate-spin text-[#B5502F]" />
-                <span className="hidden md:inline">Syncing...</span>
-              </>
-            ) : cloudSyncStatus === 'saved' ? (
-              <>
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                <span className="text-emerald-700">Synced</span>
-              </>
-            ) : cloudSyncStatus === 'error' ? (
-              <>
-                <Cloud className="w-3.5 h-3.5 text-red-500" />
-                <span className="text-red-600">Retry</span>
-              </>
-            ) : (
-              <>
-                <UploadCloud className="w-3.5 h-3.5 text-[#B5502F]" />
-                <span className="hidden md:inline">Sync to Cloud</span>
-              </>
-            )}
-          </button>
-
           <button
             onClick={handleLogout}
-            className="p-2 rounded-xl border border-[#DDD3C3] text-[#5A554F] hover:text-[#B5502F] hover:bg-[#F8ECE7] cursor-pointer"
+            className="md:hidden p-2 rounded-xl border border-[#DDD3C3] text-[#5A554F] hover:text-[#B5502F] hover:bg-[#F8ECE7] cursor-pointer"
+            title="Lock Studio"
+          >
+            <LogOut className="w-4 h-4" />
+          </button>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-1.5 bg-[#FAF7F2] p-1.5 rounded-2xl border border-[#DDD3C3] w-full md:w-auto">
+          <button
+            onClick={() => setActiveTab('add')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+              activeTab === 'add' ? 'bg-[#B5502F] text-white shadow-2xs' : 'text-[#5A554F] hover:text-[#1F1D1B]'
+            }`}
+          >
+            + Add Art
+          </button>
+          <button
+            onClick={() => setActiveTab('catalog')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+              activeTab === 'catalog' ? 'bg-[#B5502F] text-white shadow-2xs' : 'text-[#5A554F] hover:text-[#1F1D1B]'
+            }`}
+          >
+            Artworks ({artworks.length})
+          </button>
+          <button
+            onClick={() => setActiveTab('recognition')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+              activeTab === 'recognition' || activeTab === 'certificates' ? 'bg-[#B5502F] text-white shadow-2xs' : 'text-[#5A554F] hover:text-[#1F1D1B]'
+            }`}
+          >
+            Honors ({certificates.length + dignitaries.length + timelineAwards.length})
+          </button>
+          <button
+            onClick={() => setActiveTab('orders')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+              activeTab === 'orders' ? 'bg-[#B5502F] text-white shadow-2xs' : 'text-[#5A554F] hover:text-[#1F1D1B]'
+            }`}
+          >
+            Orders ({orders.length})
+          </button>
+          <button
+            onClick={handleLogout}
+            className="hidden md:flex p-1.5 rounded-xl text-[#5A554F] hover:text-[#B5502F] hover:bg-[#F8ECE7] cursor-pointer ml-1"
             title="Lock Studio"
           >
             <LogOut className="w-4 h-4" />
@@ -1355,40 +1332,40 @@ export default function Admin({
             <button
               type="button"
               onClick={() => setRecSubTab('certificates')}
-              className={`px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 cursor-pointer transition-all ${
+              className={`px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 cursor-pointer transition-all ${
                 recSubTab === 'certificates' 
                   ? 'bg-[#B5502F] text-white shadow-2xs' 
                   : 'bg-[#FAF7F2] text-[#5A554F] hover:text-[#1F1D1B] hover:bg-[#F0E9DC]'
               }`}
             >
               <FileText className="w-4 h-4" />
-              <span>Certificates of Excellence ({certificates.length})</span>
+              <span>Certificates ({certificates.length})</span>
             </button>
 
             <button
               type="button"
               onClick={() => setRecSubTab('dignitaries')}
-              className={`px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 cursor-pointer transition-all ${
+              className={`px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 cursor-pointer transition-all ${
                 recSubTab === 'dignitaries' 
                   ? 'bg-[#B5502F] text-white shadow-2xs' 
                   : 'bg-[#FAF7F2] text-[#5A554F] hover:text-[#1F1D1B] hover:bg-[#F0E9DC]'
               }`}
             >
               <Users className="w-4 h-4" />
-              <span>National & State Dignitaries ({dignitaries.length})</span>
+              <span>Dignitaries ({dignitaries.length})</span>
             </button>
 
             <button
               type="button"
               onClick={() => setRecSubTab('timeline')}
-              className={`px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 cursor-pointer transition-all ${
+              className={`px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 cursor-pointer transition-all ${
                 recSubTab === 'timeline' 
                   ? 'bg-[#B5502F] text-white shadow-2xs' 
                   : 'bg-[#FAF7F2] text-[#5A554F] hover:text-[#1F1D1B] hover:bg-[#F0E9DC]'
               }`}
             >
               <Calendar className="w-4 h-4" />
-              <span>Competition Merits & Timeline ({timelineAwards.length})</span>
+              <span>Timeline ({timelineAwards.length})</span>
             </button>
           </div>
 

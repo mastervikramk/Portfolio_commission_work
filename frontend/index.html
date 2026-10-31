@@ -11,48 +11,81 @@
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#FAF7F2" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Arthur Visions | Award-Winning Portraits & Fine Art</title>
-    <meta name="description" content="Official website of Arthur Visions by state-recognized artist Vinita. Handmade commissioned realistic portraits, charcoal, oil, watercolor, and traditional Vajjika paintings delivered across India." />
+    <title>Fine Art Studio by Vinita</title>
+    <meta name="description" content="Handcrafted portraits, authentic vajjika art on sarees and lifestyle produts, and live event sketching by an award-winning artist. Delivered accross India."/>
     <link rel="canonical" href="https://arthurvisions.in/" />
     
-    <!-- Open Graph / Facebook / WhatsApp Preview -->
+    <!-- Open Graph / WhatsApp / Instagram DM Preview -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://arthurvisions.in/" />
-    <meta property="og:title" content="Arthur Visions | Award-Winning Portraits & Fine Art" />
-    <meta property="og:description" content="Custom commissioned realistic portraits, charcoal, oil, watercolor, and traditional Vajjika fine art by state-recognized artist Vinita." />
+    <meta property="og:title" content="Arthur Visions – Fine Art Studio by Vinita, Bihar, India" />
+    <meta property="og:description" content="Fine art studio by Vinita from Bihar, India. Handcrafting realistic portraits, authentic Vajjika folk paintings, and live event sketching. Pan-India delivery." />
     <meta property="og:image" content="https://arthurvisions.in/logo.png" />
     <meta property="og:site_name" content="Arthur Visions" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://arthurvisions.in/" />
-    <meta name="twitter:title" content="Arthur Visions | Award-Winning Portraits & Fine Art" />
-    <meta name="twitter:description" content="Custom commissioned realistic portraits and traditional Vajjika fine art by state-recognized artist Vinita." />
+    <meta name="twitter:title" content="Arthur Visions – Fine Art Studio by Vinita, Bihar, India" />
+    <meta name="twitter:description" content="Fine art studio by Vinita from Bihar, India. Handcrafting realistic portraits, authentic Vajjika folk paintings, and live event sketching. Pan-India delivery." />
     <meta name="twitter:image" content="https://arthurvisions.in/logo.png" />
 
-    <!-- Search Engine Schema.org JSON-LD Structured Data -->
+    <!-- Search Engine Schema.org JSON-LD (WebSite, ArtGallery & Artist Graph) -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "ArtGallery",
-      "name": "Arthur Visions",
-      "url": "https://arthurvisions.in",
-      "logo": "https://arthurvisions.in/logo.png",
-      "image": "https://arthurvisions.in/logo.png",
-      "description": "Official studio and portfolio of state-honored artist Vinita. Specializing in bespoke charcoal, oil, acrylic, and Vajjika folk art portraits.",
-      "founder": {
-        "@type": "Person",
-        "name": "Vinita",
-        "jobTitle": "Fine Artist & Portraitist"
-      },
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Muzaffarpur",
-        "addressRegion": "Bihar",
-        "addressCountry": "IN"
-      },
-      "sameAs": [
-        "https://arthurvisions.in"
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://arthurvisions.in/#website",
+          "url": "https://arthurvisions.in/",
+          "name": "Arthur Visions",
+          "alternateName": [
+            "Arthur Visions Studio",
+            "Arthur Visions by Vinita"
+          ],
+          "publisher": {
+            "@id": "https://arthurvisions.in/#artist"
+          }
+        },
+        {
+          "@type": "ArtGallery",
+          "@id": "https://arthurvisions.in/#gallery",
+          "name": "Arthur Visions",
+          "url": "https://arthurvisions.in/",
+          "logo": "https://arthurvisions.in/logo.png",
+          "image": "https://arthurvisions.in/logo.png",
+          "description": "Fine art studio by Vinita from Bihar, India. Handcrafting realistic portraits, authentic Vajjika folk paintings, and live event sketching. Pan-India delivery.",
+          "founder": {
+            "@id": "https://arthurvisions.in/#artist"
+          },
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Muzaffarpur",
+            "addressRegion": "Bihar",
+            "postalCode": "842001",
+            "addressCountry": "IN"
+          },
+          "sameAs": [
+            "https://instagram.com/arthur_visions",
+            "https://youtube.com/@ArthurVisions-521"
+          ]
+        },
+        {
+          "@type": "Person",
+          "@id": "https://arthurvisions.in/#artist",
+          "name": "Vinita",
+          "jobTitle": "Fine Artist & Portraitist",
+          "description": "Award-winning fine artist specializing in bespoke realistic portraits, master charcoal, oil, and traditional Vajjika folk art.",
+          "award": [
+            "State Recognition by Padma Shri Dulari Devi",
+            "Bihar State Youth Festival Honor"
+          ],
+          "sameAs": [
+            "https://instagram.com/arthur_visions",
+            "https://youtube.com/@ArthurVisions-521"
+          ]
+        }
       ]
     }
     </script>

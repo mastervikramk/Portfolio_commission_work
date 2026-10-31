@@ -1,63 +1,86 @@
 import React, { useState } from 'react';
-import { QrCode, MessageCircle, Mail, ExternalLink, Smartphone } from 'lucide-react';
+import { QrCode, MessageCircle, Mail, ExternalLink, Smartphone, CheckCircle2 } from 'lucide-react';
 import { YoutubeIcon, InstagramIcon } from './SocialIcons';
 import { SITE_CONFIG } from '../config/site';
 
-export default function QuickConnectQR({ selectedTopic = "Custom Portrait Commission" }) {
+export default function QuickConnectQR({ selectedTopic = "Fine Art & Portrait Inquiries" }) {
   const [activeTab, setActiveTab] = useState('whatsapp');
 
-  const whatsappMessage = `Hi Vinita, I am reaching out regarding ${selectedTopic} via Arthur Visions website.`;
+  const whatsappMessage = selectedTopic && selectedTopic !== "Fine Art & Portrait Inquiries"
+    ? `Hi Vinita, I am reaching out regarding ${selectedTopic} via Arthur Visions website.`
+    : `Hi Vinita, I am reaching out regarding fine art portraits & inquiries via Arthur Visions website.`;
+
   const emailSubject = `[Inquiry] ${selectedTopic} - Arthur Visions`;
-  const emailBody = `Hi Vinita,\n\nI am contacting you from the Arthur Visions website regarding: ${selectedTopic}.\n\nDetails / Questions:\n\nLooking forward to hearing from you.`;
+  const emailBody = `Hi Vinita,\n\nI am contacting you from the Arthur Visions website regarding fine art / portraits.\n\nDetails / Questions:\n\nLooking forward to hearing from you.`;
   const emailUrl = `mailto:${SITE_CONFIG.publicEmail}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
 
   const qrChannels = {
     whatsapp: {
-      title: "Chat on WhatsApp",
-      shortName: "WhatsApp",
-      handle: "Arthur Visions Studio (Online)",
+      platform: "WhatsApp",
+      handleLabel: "Availability",
+      handle: "Online • 1–2 hr response",
+      ctaLabel: "Chat on WhatsApp",
       url: SITE_CONFIG.getWhatsAppUrl(whatsappMessage),
       qrUrl: `https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=12&ecc=M&data=${encodeURIComponent(SITE_CONFIG.getAbsoluteWhatsAppUrl(whatsappMessage))}`,
       color: "#25D366",
-      buttonClass: "bg-[#25D366] hover:bg-[#20ba59] text-white shadow-sm",
+      buttonClass: "bg-[#25D366] hover:bg-[#20ba59] text-white shadow-md hover:shadow-lg",
       activeTabClass: "bg-[#25D366] text-white shadow-sm font-bold",
-      actionText: `Scan with your phone to start WhatsApp chat about "${selectedTopic}", or click the button below.`,
-      badge: "Fastest Response"
+      summary: "Direct 1-on-1 consultation with artist Vinita for custom quotes, photo reviews, and order updates.",
+      points: [
+        "Share your reference photos for immediate feedback & sizing advice",
+        "Directly discuss canvas medium, framing choices & delivery schedules"
+      ],
+      badge: "Instant Chat"
     },
     instagram: {
-      title: "Follow on Instagram",
-      shortName: "Instagram",
+      platform: "Instagram",
+      handleLabel: "Username",
       handle: SITE_CONFIG.instagramHandle,
+      ctaLabel: "Open Instagram Profile",
       url: SITE_CONFIG.instagramUrl,
       qrUrl: `https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=12&ecc=M&data=${encodeURIComponent(SITE_CONFIG.instagramUrl)}`,
       color: "#E1306C",
-      buttonClass: "bg-gradient-to-r from-[#833AB4] via-[#FD1D1D] to-[#F77737] hover:opacity-95 text-white shadow-sm",
+      buttonClass: "bg-gradient-to-r from-[#833AB4] via-[#FD1D1D] to-[#F77737] hover:opacity-95 text-white shadow-md hover:shadow-lg",
       activeTabClass: "bg-gradient-to-r from-[#833AB4] via-[#FD1D1D] to-[#F77737] text-white shadow-sm font-bold",
-      actionText: "Scan with your phone to view recent artwork reels and DM us on Instagram, or click below.",
+      summary: "Follow our daily creative journey, work-in-progress reels, and finished original artworks.",
+      points: [
+        "Watch studio painting reels, pencil studies, and finished pieces",
+        "Direct message (DM) us directly for casual inquiries"
+      ],
       badge: "Art Feed"
     },
     youtube: {
-      title: "Subscribe on YouTube",
-      shortName: "YouTube",
+      platform: "YouTube",
+      handleLabel: "Channel",
       handle: SITE_CONFIG.youtubeHandle,
+      ctaLabel: "Watch on YouTube",
       url: SITE_CONFIG.youtubeUrl,
       qrUrl: `https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=12&ecc=M&data=${encodeURIComponent(SITE_CONFIG.youtubeUrl)}`,
       color: "#FF0000",
-      buttonClass: "bg-[#FF0000] hover:bg-[#d90000] text-white shadow-sm",
+      buttonClass: "bg-[#FF0000] hover:bg-[#d90000] text-white shadow-md hover:shadow-lg",
       activeTabClass: "bg-[#FF0000] text-white shadow-sm font-bold",
-      actionText: "Scan with your phone to watch creation time-lapses and tutorials, or click below to visit channel.",
-      badge: "Videos & Reels"
+      summary: "Watch full portrait creation time-lapses, acrylic art tutorials, and live event sketching videos.",
+      points: [
+        "Watch blank canvases transform into lifelike portraits in 4K",
+        "Explore creative techniques, palette knife blending & sketching"
+      ],
+      badge: "Videos & Shorts"
     },
     email: {
-      title: "Official Studio Email",
-      shortName: "Email",
+      platform: "Email",
+      handleLabel: "Official Desk",
       handle: SITE_CONFIG.publicEmail,
+      ctaLabel: "Send an Email",
       url: emailUrl,
       qrUrl: `https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=12&ecc=M&data=${encodeURIComponent(emailUrl)}`,
       color: "#EA4335",
-      buttonClass: "bg-[#EA4335] hover:bg-[#d3382b] text-white shadow-sm",
+      buttonClass: "bg-[#EA4335] hover:bg-[#d3382b] text-white shadow-md hover:shadow-lg",
       activeTabClass: "bg-[#EA4335] text-white shadow-sm font-bold",
-      actionText: `Scan to open your phone's email app pre-filled for "${selectedTopic}", or click below.`,
+      summary: "Formal inquiries for exhibitions, institutional collaborations, and press inquiries.",
+      points: [
+        "Official proposals for corporate gifting, galleries & bulk orders",
+        "High-resolution digital press kit and authenticity verification"
+      ],
       badge: "Official Desk"
     }
   };
@@ -88,17 +111,17 @@ export default function QuickConnectQR({ selectedTopic = "Custom Portrait Commis
           </div>
           <div>
             <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#1F1D1B]">
-              Scan or Click to Connect
+              Direct Contact & Socials
             </h3>
             <p className="text-xs sm:text-sm text-[#5A554F]">
-              Point your phone camera to scan, or click directly to connect instantly.
+              Scan the QR code with your phone camera, or click directly to connect.
             </p>
           </div>
         </div>
 
         <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[#F8ECE7] text-[#B5502F] border border-[#B5502F]/30 flex items-center gap-1.5 shrink-0">
           <Smartphone className="w-3.5 h-3.5" />
-          <span>Instant Connect</span>
+          <span>Quick Connect</span>
         </span>
       </div>
 
@@ -161,80 +184,93 @@ export default function QuickConnectQR({ selectedTopic = "Custom Portrait Commis
         </button>
       </div>
 
-      {/* QR Display Card */}
-      <div className="bg-white p-6 sm:p-7 rounded-2xl border border-[#DDD3C3] flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xs">
+      {/* Channel Display Card */}
+      <div className="bg-white p-5 sm:p-7 rounded-2xl border border-[#DDD3C3] flex flex-col sm:flex-row items-center sm:items-start justify-between gap-6 shadow-xs">
         
-        {/* Clean, 100% Scannable QR Code Frame */}
-        <div className="shrink-0">
+        {/* QR Code Frame + Single Direct CTA Button */}
+        <div className="shrink-0 flex flex-col items-center w-full sm:w-auto">
           <a
             href={current.url}
             target="_blank"
             rel="noopener noreferrer"
-            title={`Click to open ${current.title}`}
-            className="block p-3.5 bg-[#FAF7F2] rounded-2xl border border-[#DDD3C3] shadow-inner hover:border-[#1F1D1B]/40 transition-all cursor-pointer group"
+            title={`Click to open ${current.platform}`}
+            className="block p-3 bg-[#FAF7F2] rounded-2xl border border-[#DDD3C3] shadow-inner hover:border-[#1F1D1B]/40 transition-all cursor-pointer group"
           >
             <img
               src={current.qrUrl}
-              alt={`${current.title} QR Code`}
-              className="w-48 h-48 object-contain rounded-xl bg-white p-1"
+              alt={`${current.platform} QR Code`}
+              className="w-44 h-44 sm:w-48 sm:h-48 object-contain rounded-xl bg-white p-1 mx-auto"
               loading="eager"
             />
-            <span className="block text-center text-[10px] text-[#5A554F] group-hover:text-[#1F1D1B] font-medium mt-1.5 transition-colors">
-              Click to open directly
-            </span>
+          </a>
+
+          <a
+            href={current.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`mt-3 w-full sm:w-48 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all shadow-sm hover:shadow-md cursor-pointer active:scale-98 ${current.buttonClass}`}
+          >
+            {renderIcon(activeTab, 'w-4 h-4')}
+            <span>{current.ctaLabel}</span>
+            <ExternalLink className="w-3.5 h-3.5" />
           </a>
         </div>
 
-        {/* QR Details Beside QR Code */}
-        <div className="space-y-4 text-center sm:text-left grow">
-          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3">
-            {/* Prominent Authentic Brand Icon Beside QR Code */}
-            <div
-              className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-xs border"
-              style={{
-                backgroundColor: `${current.color}15`,
-                borderColor: `${current.color}40`,
-                color: current.color
-              }}
-            >
-              {renderIcon(activeTab, 'w-6 h-6')}
-            </div>
-
-            <div>
-              <div className="flex items-center gap-2 justify-center sm:justify-start">
-                <h4 className="font-serif text-2xl font-bold text-[#1F1D1B]">
-                  {current.title}
-                </h4>
-                <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-[#F0E9DC] text-[#5A554F]">
-                  {current.badge}
-                </span>
+        {/* Channel Details Beside QR Code */}
+        <div className="space-y-4 text-center sm:text-left grow w-full">
+          
+          {/* Header Row: Icon, Platform Name, Handle & Badge */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#DDD3C3]/60">
+            <div className="flex items-center justify-center sm:justify-start gap-3">
+              <div
+                className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0 border"
+                style={{
+                  backgroundColor: `${current.color}15`,
+                  borderColor: `${current.color}35`,
+                  color: current.color
+                }}
+              >
+                {renderIcon(activeTab, 'w-5 h-5')}
               </div>
-              <p className="text-xs font-bold mt-0.5" style={{ color: current.color }}>
-                {current.handle}
-              </p>
+              <div className="text-left">
+                <div className="flex items-center gap-2">
+                  <h4 className="font-serif text-2xl font-bold text-[#1F1D1B]">
+                    {current.platform}
+                  </h4>
+                  <span className="px-2.5 py-0.5 rounded-full text-[10.5px] font-semibold bg-[#F0E9DC] text-[#5A554F]">
+                    {current.badge}
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5 text-xs text-[#5A554F] mt-0.5">
+                  <span>{current.handleLabel}:</span>
+                  <span className="font-semibold font-mono text-[#1F1D1B]">
+                    {current.handle}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
 
-          <p className="text-xs text-[#5A554F] leading-relaxed max-w-md mx-auto sm:mx-0">
-            {current.actionText}
+          {/* Purpose Summary */}
+          <p className="text-xs sm:text-sm text-[#5A554F] leading-relaxed">
+            {current.summary}
           </p>
 
-          {/* Action Button Styled with Official Company Colors */}
-          <div className="pt-2 flex flex-wrap items-center justify-center sm:justify-start gap-3">
-            <a
-              href={current.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all cursor-pointer ${current.buttonClass}`}
-            >
-              {renderIcon(activeTab, 'w-4 h-4')}
-              <span>Click to Open {current.shortName}</span>
-              <ExternalLink className="w-3.5 h-3.5" />
-            </a>
-            <span className="text-xs text-[#5A554F]">
-              (or scan QR code with your phone camera)
-            </span>
+          {/* Key Bullet Points */}
+          <ul className="text-xs text-[#5A554F] space-y-2 pt-1 text-left">
+            {current.points.map((pt, idx) => (
+              <li key={idx} className="flex items-start gap-2">
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#6B7F5E] shrink-0 mt-0.5" />
+                <span>{pt}</span>
+              </li>
+            ))}
+          </ul>
+
+          {/* Usage Tip */}
+          <div className="pt-2 text-[11.5px] text-[#5A554F] bg-[#FAF7F2] p-2.5 rounded-xl border border-[#DDD3C3]/70 text-left">
+            💡 <strong>On mobile?</strong> Tap the button below the QR. <strong>On desktop?</strong> Scan the QR code directly with your phone.
           </div>
+
         </div>
 
       </div>
