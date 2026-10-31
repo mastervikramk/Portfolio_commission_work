@@ -169,7 +169,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2] text-[#1F1D1B] flex flex-col font-sans selection:bg-[#B5502F]/20 selection:text-[#B5502F]">
+    <div className="min-h-screen min-w-[360px] bg-[#FAF7F2] text-[#1F1D1B] flex flex-col font-sans selection:bg-[#B5502F]/20 selection:text-[#B5502F]">
       
       {/* Fixed Sticky Header Navigation */}
       <Navbar activePage={activePage} setActivePage={handlePageChange} />

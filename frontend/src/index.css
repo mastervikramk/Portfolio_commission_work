@@ -34,6 +34,7 @@
     scroll-behavior: smooth;
     scrollbar-color: var(--color-line) var(--color-paper);
     scrollbar-width: thin;
+    min-width: 360px;
   }
 
   body {
@@ -41,6 +42,8 @@
     color: var(--color-charcoal);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    min-width: 360px;
+    overflow-x: auto;
   }
 
   h1, h2, h3 {

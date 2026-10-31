@@ -13,7 +13,9 @@ export default function Gallery({ artworks, onOpenLightbox, onOrderSimilar }) {
 
     if (!matchesCategory) {
       if (selectedCategory === "Vajjika Painting") {
-        matchesCategory = cat === "Vajjika Painting" || cat.toLowerCase().includes("vajjika");
+        matchesCategory = cat === "Vajjika Painting";
+      } else if (selectedCategory === "Vajjika on Products") {
+        matchesCategory = cat === "Vajjika on Products" || (cat.toLowerCase().includes("vajjika") && cat.toLowerCase().includes("product"));
       } else {
         matchesCategory = cat === selectedCategory;
       }
@@ -171,6 +173,8 @@ export default function Gallery({ artworks, onOpenLightbox, onOrderSimilar }) {
                     <span>
                       {(art.title || '').toLowerCase().includes('saree')
                         ? 'Inquire Saree'
+                        : art.category === 'Vajjika on Products' || (art.description || '').toLowerCase().includes('clutch') || (art.description || '').toLowerCase().includes('bag')
+                        ? 'Inquire Product'
                         : (art.category || '').toLowerCase().includes('vajjika')
                         ? 'Inquire Painting'
                         : 'Order Similar'}
@@ -182,6 +186,8 @@ export default function Gallery({ artworks, onOpenLightbox, onOrderSimilar }) {
                     href={SITE_CONFIG.getWhatsAppUrl(
                       (art.title || '').toLowerCase().includes('saree')
                         ? `Hi Vinita, I saw your "${art.title}" in your gallery. I would like to inquire about ordering this hand-painted Saree.`
+                        : art.category === 'Vajjika on Products'
+                        ? `Hi Vinita, I saw your "${art.title}" (Vajjika on Products) in your gallery. I would like to inquire about ordering this handcrafted piece.`
                         : (art.category || '').toLowerCase().includes('vajjika')
                         ? `Hi Vinita, I saw your Vajjika painting "${art.title}" in your gallery. I would like to inquire about purchasing / commissioning this piece.`
                         : `Hi Vinita, I saw your artwork "${art.title}" (${art.medium}) on your website. I want to inquire about purchasing or commissioning a similar piece.`

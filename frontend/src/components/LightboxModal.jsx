@@ -128,6 +128,8 @@ export default function LightboxModal({ item, onClose, onOrderSimilar }) {
                 <span>
                   {(item.title || '').toLowerCase().includes('saree')
                     ? 'Inquire Saree'
+                    : item.category === 'Vajjika on Products' || (item.description || '').toLowerCase().includes('clutch') || (item.description || '').toLowerCase().includes('bag')
+                    ? 'Inquire Product'
                     : (item.category || '').toLowerCase().includes('vajjika')
                     ? 'Inquire Painting'
                     : 'Commission Similar Artwork'}

@@ -271,7 +271,7 @@ export default function Home({ artworks, setActivePage, onOpenLightbox, setSelec
               </div>
 
               <h3 className="font-serif text-2xl font-bold text-[#1F1D1B]">
-                Vajjika Folk Art (वज्जिका)
+                Vajjika Folk Art
               </h3>
               
               <p className="text-sm text-[#5A554F] leading-relaxed">
@@ -429,48 +429,28 @@ export default function Home({ artworks, setActivePage, onOpenLightbox, setSelec
               Step inside the studio. Watch raw pencil lines, delicate acrylic layers, and realistic textures come together on canvas right from the artist's easel.
             </p>
 
-            <div className="p-4 rounded-2xl bg-[#FAF7F2] border border-[#DDD3C3] flex items-center justify-between gap-4">
-              <div className="space-y-0.5">
-                <span className="text-[11px] font-semibold uppercase tracking-wider text-[#B5502F] flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-[#B5502F] animate-pulse" />
-                  Featured Studio Video
-                </span>
-                <p className="font-serif font-bold text-base text-[#1F1D1B]">
-                  {SITE_CONFIG.latestShortTitle}
-                </p>
-                <p className="text-xs text-[#5A554F]">
-                  Studio: {SITE_CONFIG.youtubeHandle}
-                </p>
-              </div>
-              <a
-                href={`https://www.youtube.com/shorts/${SITE_CONFIG.latestShortId}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="shrink-0 px-3.5 py-2 rounded-xl bg-white border border-[#DDD3C3] text-xs font-semibold text-[#1F1D1B] hover:text-[#B5502F] hover:border-[#B5502F] transition-colors flex items-center gap-1.5 shadow-2xs"
-              >
-                <span>Open in App</span>
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
+            <div className="p-4 rounded-2xl bg-[#FAF7F2] border border-[#DDD3C3] space-y-0.5">
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-[#B5502F] flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-[#B5502F] animate-pulse" />
+                Featured Studio Video
+              </span>
+              <p className="font-serif font-bold text-base text-[#1F1D1B]">
+                {SITE_CONFIG.latestShortTitle}
+              </p>
+              <p className="text-xs text-[#5A554F]">
+                Studio Channel: {SITE_CONFIG.youtubeHandle}
+              </p>
             </div>
 
-            <div className="flex flex-wrap items-center gap-4 pt-2">
-              <a
-                href={SITE_CONFIG.youtubeShortsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-6 py-3 rounded-full bg-[#B5502F] text-white hover:bg-[#9B4224] text-sm font-semibold transition-all shadow-sm flex items-center gap-2"
-              >
-                <span>Explore More Works in Action</span>
-                <ArrowRight className="w-4 h-4" />
-              </a>
+            <div className="pt-2">
               <a
                 href={SITE_CONFIG.youtubeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-6 py-3 rounded-full bg-white border border-[#DDD3C3] text-[#1F1D1B] hover:bg-[#FAF7F2] text-sm font-semibold transition-all shadow-2xs flex items-center gap-2"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#B5502F] text-white hover:bg-[#9B4224] text-sm font-semibold transition-all shadow-sm"
               >
-                <span>Open on YouTube</span>
-                <ExternalLink className="w-3.5 h-3.5 text-[#5A554F]" />
+                <span>Watch More on YouTube</span>
+                <ExternalLink className="w-4 h-4" />
               </a>
             </div>
           </div>

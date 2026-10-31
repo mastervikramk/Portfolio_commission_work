@@ -34,7 +34,7 @@ export const ARTWORKS_DATA = [
   },
   {
     id: "art-charcoal-2",
-    title: "Mouth Organ (मुँह का बाजा)",
+    title: "Mouth Organ",
     medium: "Charcoal on Archival Paper",
     category: "Charcoal",
     dimensions: "12 × 16 in (A3)",
@@ -46,7 +46,7 @@ export const ARTWORKS_DATA = [
   },
   {
     id: "art-vajjika-2",
-    title: "Vajjika Folk Rhythm (वज्जिका कला)",
+    title: "Vajjika Folk Rhythm",
     medium: "Natural Pigments on Canvas",
     category: "Vajjika Painting",
     dimensions: "18 × 24 in",
@@ -219,6 +219,19 @@ export const ARTWORKS_DATA = [
     description: "Expressive on-the-spot live portrait capturing authentic expressions, personality, and delicate facial contours.",
     image: livePortrait,
     featured: false
+  },
+  {
+    id: "art-vajjika-product-1",
+    title: "Hand-Painted Vajjika Heritage Clutch",
+    medium: "Handcrafted Canvas with Traditional Pigments",
+    category: "Vajjika on Products",
+    dimensions: "9 × 6 in",
+    year: "2025",
+    status: "Made to Order",
+    price: "₹2,800",
+    description: "Authentic Vaishali Vajjika folk art hand-rendered on handcrafted lifestyle accessory. Customizable on sling bags, handbags, and coin pouches.",
+    image: vajjika1,
+    featured: false
   }
 ];
 
@@ -232,6 +245,7 @@ export const CATEGORIES = [
   "Oil",
   "Acrylic",
   "Vajjika Painting",
+  "Vajjika on Products",
   "Live Portrait"
 ];
 
